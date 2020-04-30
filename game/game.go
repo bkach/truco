@@ -15,7 +15,7 @@ type Game struct {
 
 // Global state
 var GlobalGame Game
-var debugOn = true
+var debugOn = false
 
 func StartGame() Game {
 	game := Game{
