@@ -1,11 +1,12 @@
 package actions
 
 type Game struct {
-	Board        Cards
+	Board        []Card
 	PlayerStates PlayerStates
 }
 
-var currentDeck Cards
+// TODO: Put in game
+var currentDeck []Card
 var currentGame Game
 
 // For testing
@@ -14,7 +15,7 @@ var debugOn = false
 func startGame() Game {
 	currentDeck = buildDeck()
 	currentGame = Game{
-		Board:        Cards([]Card{}),
+		Board:        []Card{},
 		PlayerStates: PlayerStates([]PlayerState{}),
 	}
 	return currentGame
@@ -27,8 +28,8 @@ func playCard(card Card, id string) (PlayerState, Game, error) {
 		return PlayerState{}, currentGame, error
 	}
 
-	playerState.Hand.findAndRemoveCard(card)
-	currentGame.Board.addCard(card)
+	findAndRemoveCard(&playerState.Hand, card)
+	addCard(&currentGame.Board, card)
 
 	return *playerState, currentGame, error
 }

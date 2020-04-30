@@ -13,7 +13,7 @@ type PlayerInfo struct {
 
 type PlayerState struct {
 	Info PlayerInfo
-	Hand Cards
+	Hand []Card
 }
 
 type PlayerStates []PlayerState
@@ -42,11 +42,11 @@ func addPlayer(name string) (Game, PlayerState, error) {
 			Name: name,
 			ID:   playerId,
 		},
-		Hand: Cards([]Card{
-			currentDeck.getAndRemoveRandomCard(),
-			currentDeck.getAndRemoveRandomCard(),
-			currentDeck.getAndRemoveRandomCard(),
-		}),
+		Hand: []Card{
+			getAndRemoveRandomCard(&currentDeck),
+			getAndRemoveRandomCard(&currentDeck),
+			getAndRemoveRandomCard(&currentDeck),
+		},
 	}
 
 	currentGame = Game{

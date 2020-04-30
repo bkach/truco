@@ -12,7 +12,7 @@ type AddPlayerRequest struct {
 
 type AddPlayerResponse struct {
 	PlayerState PlayerState
-	Board       Cards
+	Board       []Card
 }
 
 type GetPlayerStateRequest struct {
@@ -21,7 +21,7 @@ type GetPlayerStateRequest struct {
 
 type GetPlayerStateResponse struct {
 	PlayerState PlayerState
-	Board       Cards
+	Board       []Card
 }
 
 type PlayCardRequest struct {
@@ -31,7 +31,7 @@ type PlayCardRequest struct {
 
 type PlayCardResponse struct {
 	PlayerState PlayerState
-	Board       Cards
+	Board       []Card
 }
 
 // Handles requests to start the game

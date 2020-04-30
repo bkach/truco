@@ -21,8 +21,6 @@ type Card struct {
 	House House `json:"house"`
 }
 
-type Cards []Card
-
 func buildDeck() []Card {
 	var cards []Card
 	for i := 1; i <= 12; i++ {
@@ -37,7 +35,7 @@ func buildDeck() []Card {
 	return cards
 }
 
-func (cards *Cards) findCard(card Card) (int, *Card) {
+func findCard(cards *[]Card, card Card) (int, *Card) {
 	for i, v := range *cards {
 		if v.Value == card.Value && v.House == card.House {
 			return i, &v
@@ -46,28 +44,28 @@ func (cards *Cards) findCard(card Card) (int, *Card) {
 	return -1, nil
 }
 
-func (cards *Cards) removeCard(index int) {
+func removeCard(cards *[]Card, index int) {
 	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }
 
-func (cards *Cards) addCard(card Card) {
+func addCard(cards *[]Card, card Card) {
 	*cards = append(*cards, card)
 }
 
-func (cards *Cards) findAndRemoveCard(card Card) {
+func findAndRemoveCard(cards *[]Card, card Card) {
 	fmt.Printf("\n\ncards %d\n\n", len(*cards))
-	index, _ := cards.findCard(card)
+	index, _ := findCard(cards, card)
 	if index != -1 {
-		cards.removeCard(index)
+		removeCard(cards, index)
 	}
 }
 
-func (cards *Cards) getAndRemoveRandomCard() Card {
+func getAndRemoveRandomCard(cards *[]Card) Card {
 	var r int
 	highestIndex := len(*cards) - 1
 
 	if highestIndex == 0 {
-		*cards = Cards{}
+		*cards = []Card{}
 		return (*cards)[0]
 	} else {
 		// For testing
@@ -80,7 +78,7 @@ func (cards *Cards) getAndRemoveRandomCard() Card {
 
 	card := (*cards)[r]
 
-	cards.removeCard(r)
+	removeCard(cards, r)
 
 	return card
 }

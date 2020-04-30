@@ -8,17 +8,20 @@ import (
 func (as *ActionSuite) Test_NewGame() {
 	debugOn = false
 
+	// Create a new game
 	res := as.JSON("/newGame").Get()
 
 	as.Equal(http.StatusOK, res.Code)
 
+	// Check that the game state is as expected
 	as.Equal(Game{
-		Board:        Cards([]Card{}),
+		Board:        []Card{},
 		PlayerStates: PlayerStates([]PlayerState{}),
 	}, currentGame)
 
 	resultTrimmed := strings.TrimSpace(res.Body.String())
 
+	// Check that the result is as expected
 	as.Equal(resultTrimmed, `{"Board":[],"PlayerStates":[]}`)
 }
 
