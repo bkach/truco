@@ -2,13 +2,14 @@
 
 ![](assets/1ofspades.jpg)
 
-This Repo is a simple backend for the game [Truco](https://en.wikipedia.org/wiki/Truco) written in [go](https://golang.org/).
+This Repo is a simple backend for the game [Truco](https://en.wikipedia.org/wiki/Truco) written in
+[go](https://golang.org/) running on [buffalo](https://gobuffalo.io/en/).
 
 ## Endpoints and Documentation
 
 ### `GET/newGame`
 
-Starts a new game and builds a deck
+Starts a new game and builds a deck.
 
 #### Response
 
@@ -183,7 +184,9 @@ Starts a new game and builds a deck
 
 ### `POST /addPlayer`
 
-Adds a player to the game
+Adds a player to the game and deals them in with a random set of three cards.
+
+###### Todo: Separate adding a player and dealing to all players
 
 #### Request
 
@@ -263,7 +266,7 @@ Gets information on a given player
 
 ### `POST /playCard`
 
-Gets information on a given player
+Adds a card from a players' hand to the board.
 
 #### Request
 
