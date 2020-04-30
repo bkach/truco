@@ -63,7 +63,7 @@ func GetPlayerStateHandler(c buffalo.Context) error {
 	request := &GetPlayerStateRequest{}
 	c.Bind(request)
 
-	playerState, game, err := currentGame.PlayerStates.GetPlayerState(request.PlayerId)
+	playerState, game, err := GetPlayerState(&currentGame.PlayerStates, request.PlayerId)
 
 	if err != nil {
 		return c.Render(http.StatusBadRequest, r.JSON(

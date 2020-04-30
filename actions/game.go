@@ -2,7 +2,7 @@ package actions
 
 type Game struct {
 	Board        []Card
-	PlayerStates PlayerStates
+	PlayerStates []PlayerState
 }
 
 // TODO: Put in game
@@ -16,13 +16,13 @@ func startGame() Game {
 	currentDeck = buildDeck()
 	currentGame = Game{
 		Board:        []Card{},
-		PlayerStates: PlayerStates([]PlayerState{}),
+		PlayerStates: []PlayerState{},
 	}
 	return currentGame
 }
 
 func playCard(card Card, id string) (PlayerState, Game, error) {
-	_, playerState, error := currentGame.PlayerStates.findPlayer(id)
+	_, playerState, error := findPlayer(&currentGame.PlayerStates, id)
 
 	if error != nil {
 		return PlayerState{}, currentGame, error

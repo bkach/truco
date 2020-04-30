@@ -16,7 +16,7 @@ func (as *ActionSuite) Test_NewGame() {
 	// Check that the game state is as expected
 	as.Equal(Game{
 		Board:        []Card{},
-		PlayerStates: PlayerStates([]PlayerState{}),
+		PlayerStates: []PlayerState{},
 	}, currentGame)
 
 	resultTrimmed := strings.TrimSpace(res.Body.String())
@@ -29,6 +29,7 @@ func (as *ActionSuite) Test_AddPlayer() {
 	debugOn = false
 
 	as.JSON("/newGame").Get()
+
 	res := as.JSON("/addPlayer").Post(&AddPlayerRequest{Name: "boris"})
 	as.Equal(http.StatusOK, res.Code)
 

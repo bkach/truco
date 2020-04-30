@@ -16,8 +16,6 @@ type PlayerState struct {
 	Hand []Card
 }
 
-type PlayerStates []PlayerState
-
 func addPlayer(name string) (Game, PlayerState, error) {
 	if len(currentDeck) < 3 {
 		return currentGame, PlayerState{}, errors.New("Deck not big enough to make a new hand")
@@ -57,12 +55,12 @@ func addPlayer(name string) (Game, PlayerState, error) {
 	return currentGame, newPlayer, nil
 }
 
-func (playerStates *PlayerStates) GetPlayerState(playerId string) (*PlayerState, Game, error) {
-	_, player, err := playerStates.findPlayer(playerId)
+func GetPlayerState(playerStates *[]PlayerState, playerId string) (*PlayerState, Game, error) {
+	_, player, err := findPlayer(playerStates, playerId)
 	return player, currentGame, err
 }
 
-func (playerStates *PlayerStates) findPlayer(playerId string) (int, *PlayerState, error) {
+func findPlayer(playerStates *[]PlayerState, playerId string) (int, *PlayerState, error) {
 	for i, v := range *playerStates {
 		if v.Info.ID == playerId {
 			return i, &v, nil
