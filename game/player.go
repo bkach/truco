@@ -15,15 +15,7 @@ type PlayerState struct {
 	Hand []Card
 }
 
-func AddPlayer(name string) (*PlayerState, error) {
-	if len(CurrentGame.Deck) < NumCardsInHand {
-		return nil, errors.New("deck not big enough to make a new hand")
-	}
-
-	if len(CurrentGame.Players) == MaxPlayers {
-		return nil, errors.New("no more new players can be added")
-	}
-
+func CreatePlayer(name string) (*PlayerState, error) {
 	playerUUID, err := uuid.NewV4()
 
 	if err != nil {
@@ -33,9 +25,9 @@ func AddPlayer(name string) (*PlayerState, error) {
 	// For testing
 	var playerId string
 	if debugOn {
-		playerId = "player_" + playerUUID.String()
-	} else {
 		playerId = "player_" + name
+	} else {
+		playerId = "player_" + playerUUID.String()
 	}
 
 	var hand []Card
@@ -43,21 +35,13 @@ func AddPlayer(name string) (*PlayerState, error) {
 		hand = append(hand, popRandomCard(&CurrentGame.Deck))
 	}
 
-	newPlayer := PlayerState{
+	return &PlayerState{
 		Info: PlayerInfo{
 			Name: name,
 			ID:   playerId,
 		},
 		Hand: hand,
-	}
-
-	CurrentGame = Game{
-		Board:   CurrentGame.Board,
-		Players: append(CurrentGame.Players, newPlayer),
-		Deck:    CurrentGame.Deck,
-	}
-
-	return &newPlayer, nil
+	}, nil
 }
 
 func FindPlayer(playerStates []PlayerState, playerId string) (int, *PlayerState, error) {

@@ -7,7 +7,7 @@ import (
 )
 
 func Test_NewGame_HasExpectedState(t *testing.T) {
-	debugOn = false
+	debugOn = true
 
 	// Create a new game
 	StartGame()
@@ -64,7 +64,7 @@ func Test_NewGame_HasExpectedState(t *testing.T) {
 }
 
 func Test_AddPlayer_HasExpectedState(t *testing.T) {
-	debugOn = false
+	debugOn = true
 
 	StartGame()
 
@@ -145,7 +145,7 @@ func Test_AddPlayer_HasExpectedState(t *testing.T) {
 }
 
 func Test_PlayCard_HasExpectedState(t *testing.T) {
-	debugOn = false
+	debugOn = true
 
 	StartGame()
 
@@ -227,7 +227,7 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 }
 
 func Test_PlayInvalidCard_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
-	debugOn = false
+	debugOn = true
 
 	StartGame()
 
@@ -308,7 +308,7 @@ func Test_PlayInvalidCard_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
 }
 
 func Test_PlayInvalidPlayer_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
-	debugOn = false
+	debugOn = true
 
 	StartGame()
 

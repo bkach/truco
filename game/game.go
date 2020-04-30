@@ -1,5 +1,9 @@
 package game
 
+import (
+	"errors"
+)
+
 const MaxPlayers = 4
 const NumCardsInHand = 3
 
@@ -9,9 +13,8 @@ type Game struct {
 	Deck    []Card
 }
 
+// Global state
 var CurrentGame Game
-
-// For testing
 var debugOn = false
 
 func StartGame() Game {
@@ -30,13 +33,39 @@ func PlayCard(card Card, playerId string) error {
 		return err
 	}
 
-	findCardErr := findAndRemoveCard(&CurrentGame.Players[playerIndex].Hand, card)
+	playerHand := &CurrentGame.Players[playerIndex].Hand
 
-	if findCardErr != nil {
-		return findCardErr
+	index, err := findCardIndex(playerHand, card)
+	if err != nil {
+		return err
 	}
 
+	removeCard(playerHand, index)
 	addCard(&CurrentGame.Board, card)
 
-	return err
+	return nil
+}
+
+func AddPlayer(name string) (*PlayerState, error) {
+	if len(CurrentGame.Deck) < NumCardsInHand {
+		return nil, errors.New("deck not big enough to make a new hand")
+	}
+
+	if len(CurrentGame.Players) == MaxPlayers {
+		return nil, errors.New("no more new players can be added")
+	}
+
+	newPlayer, err := CreatePlayer(name)
+
+	if err != nil {
+		return nil, errors.New("error creating player")
+	}
+
+	CurrentGame = Game{
+		Board:   CurrentGame.Board,
+		Players: append(CurrentGame.Players, *newPlayer),
+		Deck:    CurrentGame.Deck,
+	}
+
+	return newPlayer, nil
 }

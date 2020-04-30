@@ -35,13 +35,13 @@ func buildDeck() []Card {
 	return cards
 }
 
-func findCard(cards *[]Card, card Card) (int, *Card) {
+func findCardIndex(cards *[]Card, card Card) (int, error) {
 	for i, v := range *cards {
 		if v.Value == card.Value && v.House == card.House {
-			return i, &v
+			return i, nil
 		}
 	}
-	return -1, nil
+	return -1, errors.New("cannot find card")
 }
 
 func removeCard(cards *[]Card, index int) {
@@ -50,16 +50,6 @@ func removeCard(cards *[]Card, index int) {
 
 func addCard(cards *[]Card, card Card) {
 	*cards = append(*cards, card)
-}
-
-func findAndRemoveCard(cards *[]Card, card Card) error {
-	index, _ := findCard(cards, card)
-	if index == -1 {
-		return errors.New("card not found")
-	}
-
-	removeCard(cards, index)
-	return nil
 }
 
 func popRandomCard(cards *[]Card) Card {
@@ -72,9 +62,9 @@ func popRandomCard(cards *[]Card) Card {
 	} else {
 		// For testing
 		if debugOn {
-			r = rand.Intn(highestIndex)
-		} else {
 			r = 0
+		} else {
+			r = rand.Intn(highestIndex)
 		}
 	}
 
