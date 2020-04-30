@@ -1,7 +1,7 @@
 package game
 
-const MAX_PLAYERS = 4
-const NUM_CARDS_IN_HAND = 3
+const MaxPlayers = 4
+const NumCardsInHand = 3
 
 type Game struct {
 	Board   []Card

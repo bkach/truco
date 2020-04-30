@@ -16,11 +16,11 @@ type PlayerState struct {
 }
 
 func AddPlayer(name string) (*PlayerState, error) {
-	if len(CurrentGame.Deck) < NUM_CARDS_IN_HAND {
+	if len(CurrentGame.Deck) < NumCardsInHand {
 		return nil, errors.New("deck not big enough to make a new hand")
 	}
 
-	if len(CurrentGame.Players) == MAX_PLAYERS {
+	if len(CurrentGame.Players) == MaxPlayers {
 		return nil, errors.New("no more new players can be added")
 	}
 
@@ -39,7 +39,7 @@ func AddPlayer(name string) (*PlayerState, error) {
 	}
 
 	var hand []Card
-	for i := 0; i < NUM_CARDS_IN_HAND; i++ {
+	for i := 0; i < NumCardsInHand; i++ {
 		hand = append(hand, popRandomCard(&CurrentGame.Deck))
 	}
 
