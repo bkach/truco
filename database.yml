@@ -1,9 +1,8 @@
 ---
 development:
   dialect: postgres
-  database: truco_backend_development
-  user: postgres
-  password: postgres
+  database: truco_db
+  user: boris
   host: 127.0.0.1
   pool: 5
 
