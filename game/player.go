@@ -2,7 +2,6 @@ package game
 
 import (
 	"errors"
-
 	"github.com/gofrs/uuid"
 )
 
@@ -16,19 +15,19 @@ type PlayerState struct {
 	Hand []Card
 }
 
-func AddPlayer(name string) (PlayerState, Game, error) {
-	if len(currentDeck) < 3 {
-		return PlayerState{}, CurrentGame, errors.New("deck not big enough to make a new hand")
+func AddPlayer(name string) (*PlayerState, error) {
+	if len(CurrentGame.Deck) < NUM_CARDS_IN_HAND {
+		return nil, errors.New("deck not big enough to make a new hand")
 	}
 
-	if len(CurrentGame.PlayerStates) == 4 {
-		return PlayerState{}, CurrentGame, errors.New("no more new players can be added")
+	if len(CurrentGame.Players) == MAX_PLAYERS {
+		return nil, errors.New("no more new players can be added")
 	}
 
 	playerUUID, err := uuid.NewV4()
 
 	if err != nil {
-		return PlayerState{}, CurrentGame, errors.New("error making UUID")
+		return nil, errors.New("error making UUID")
 	}
 
 	// For testing
@@ -39,36 +38,37 @@ func AddPlayer(name string) (PlayerState, Game, error) {
 		playerId = "player_" + name
 	}
 
+	var hand []Card
+	for i := 0; i < NUM_CARDS_IN_HAND; i++ {
+		hand = append(hand, popRandomCard(&CurrentGame.Deck))
+	}
+
 	newPlayer := PlayerState{
 		Info: PlayerInfo{
 			Name: name,
 			ID:   playerId,
 		},
-		Hand: []Card{
-			getAndRemoveRandomCard(&currentDeck),
-			getAndRemoveRandomCard(&currentDeck),
-			getAndRemoveRandomCard(&currentDeck),
-		},
+		Hand: hand,
 	}
 
 	CurrentGame = Game{
-		Board:        CurrentGame.Board,
-		PlayerStates: append(CurrentGame.PlayerStates, newPlayer),
+		Board:   CurrentGame.Board,
+		Players: append(CurrentGame.Players, newPlayer),
+		Deck:    CurrentGame.Deck,
 	}
 
-	return newPlayer, CurrentGame, nil
+	return &newPlayer, nil
 }
 
-func GetPlayerState(playerStates *[]PlayerState, playerId string) (*PlayerState, Game, error) {
-	_, player, err := findPlayer(playerStates, playerId)
-	return player, CurrentGame, err
-}
+func FindPlayer(playerStates []PlayerState, playerId string) (int, *PlayerState, error) {
+	var playerNames []string
 
-func findPlayer(playerStates *[]PlayerState, playerId string) (int, *PlayerState, error) {
-	for i, v := range *playerStates {
+	for i, v := range playerStates {
 		if v.Info.ID == playerId {
+			playerNames = append(playerNames, v.Info.ID)
 			return i, &v, nil
 		}
 	}
-	return -1, &PlayerState{}, errors.New("Can't find player")
+
+	return -1, nil, errors.New("can't find player")
 }

@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	"errors"
 	"math/rand"
 )
 
@@ -52,15 +52,17 @@ func addCard(cards *[]Card, card Card) {
 	*cards = append(*cards, card)
 }
 
-func findAndRemoveCard(cards *[]Card, card Card) {
-	fmt.Printf("\n\ncards %d\n\n", len(*cards))
+func findAndRemoveCard(cards *[]Card, card Card) error {
 	index, _ := findCard(cards, card)
-	if index != -1 {
-		removeCard(cards, index)
+	if index == -1 {
+		return errors.New("card not found")
 	}
+
+	removeCard(cards, index)
+	return nil
 }
 
-func getAndRemoveRandomCard(cards *[]Card) Card {
+func popRandomCard(cards *[]Card) Card {
 	var r int
 	highestIndex := len(*cards) - 1
 

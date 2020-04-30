@@ -1,35 +1,42 @@
 package game
 
+const MAX_PLAYERS = 4
+const NUM_CARDS_IN_HAND = 3
+
 type Game struct {
-	Board        []Card
-	PlayerStates []PlayerState
+	Board   []Card
+	Players []PlayerState
+	Deck    []Card
 }
 
-// TODO: Put in game
-var currentDeck []Card
 var CurrentGame Game
 
 // For testing
 var debugOn = false
 
 func StartGame() Game {
-	currentDeck = buildDeck()
 	CurrentGame = Game{
-		Board:        []Card{},
-		PlayerStates: []PlayerState{},
+		Board:   []Card{},
+		Players: []PlayerState{},
+		Deck:    buildDeck(),
 	}
 	return CurrentGame
 }
 
-func PlayCard(card Card, id string) (PlayerState, Game, error) {
-	_, playerState, err := findPlayer(&CurrentGame.PlayerStates, id)
+func PlayCard(card Card, playerId string) error {
+	playerIndex, _, err := FindPlayer(CurrentGame.Players, playerId)
 
 	if err != nil {
-		return PlayerState{}, CurrentGame, err
+		return err
 	}
 
-	findAndRemoveCard(&playerState.Hand, card)
+	findCardErr := findAndRemoveCard(&CurrentGame.Players[playerIndex].Hand, card)
+
+	if findCardErr != nil {
+		return findCardErr
+	}
+
 	addCard(&CurrentGame.Board, card)
 
-	return *playerState, CurrentGame, err
+	return err
 }
