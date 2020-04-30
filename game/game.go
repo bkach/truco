@@ -14,26 +14,26 @@ type Game struct {
 }
 
 // Global state
-var CurrentGame Game
-var debugOn = false
+var GlobalGame Game
+var debugOn = true
 
 func StartGame() Game {
-	CurrentGame = Game{
+	game := Game{
 		Board:   []Card{},
 		Players: []PlayerState{},
 		Deck:    buildDeck(),
 	}
-	return CurrentGame
+	return game
 }
 
-func PlayCard(card Card, playerId string) error {
-	playerIndex, _, err := FindPlayer(CurrentGame.Players, playerId)
+func PlayCard(game *Game, card Card, playerId string) error {
+	playerIndex, _, err := FindPlayer(game.Players, playerId)
 
 	if err != nil {
 		return err
 	}
 
-	playerHand := &CurrentGame.Players[playerIndex].Hand
+	playerHand := &game.Players[playerIndex].Hand
 
 	index, err := findCardIndex(playerHand, card)
 	if err != nil {
@@ -41,31 +41,27 @@ func PlayCard(card Card, playerId string) error {
 	}
 
 	removeCard(playerHand, index)
-	addCard(&CurrentGame.Board, card)
+	addCard(&game.Board, card)
 
 	return nil
 }
 
-func AddPlayer(name string) (*PlayerState, error) {
-	if len(CurrentGame.Deck) < NumCardsInHand {
+func AddPlayer(game *Game, name string) (*PlayerState, error) {
+	if len(game.Deck) < NumCardsInHand {
 		return nil, errors.New("deck not big enough to make a new hand")
 	}
 
-	if len(CurrentGame.Players) == MaxPlayers {
+	if len(game.Players) == MaxPlayers {
 		return nil, errors.New("no more new players can be added")
 	}
 
-	newPlayer, err := CreatePlayer(name)
+	newPlayer, err := createPlayer(game, name)
 
 	if err != nil {
 		return nil, errors.New("error creating player")
 	}
 
-	CurrentGame = Game{
-		Board:   CurrentGame.Board,
-		Players: append(CurrentGame.Players, *newPlayer),
-		Deck:    CurrentGame.Deck,
-	}
+	game.Players = append(game.Players, *newPlayer)
 
 	return newPlayer, nil
 }

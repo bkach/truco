@@ -15,7 +15,7 @@ type PlayerState struct {
 	Hand []Card
 }
 
-func CreatePlayer(name string) (*PlayerState, error) {
+func createPlayer(game *Game, name string) (*PlayerState, error) {
 	playerUUID, err := uuid.NewV4()
 
 	if err != nil {
@@ -32,7 +32,7 @@ func CreatePlayer(name string) (*PlayerState, error) {
 
 	var hand []Card
 	for i := 0; i < NumCardsInHand; i++ {
-		hand = append(hand, popRandomCard(&CurrentGame.Deck))
+		hand = append(hand, popRandomCard(&game.Deck))
 	}
 
 	return &PlayerState{

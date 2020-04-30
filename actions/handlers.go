@@ -36,12 +36,14 @@ type PlayCardResponse struct {
 }
 
 // Handles requests to start the game
-func NewGameHandler(c buffalo.Context) error {
-	return c.Render(http.StatusOK, r.JSON(game.StartGame()))
+func newGameHandler(c buffalo.Context) error {
+	game.GlobalGame = game.StartGame()
+
+	return c.Render(http.StatusOK, r.JSON(game.GlobalGame))
 }
 
 // Handles requests to add a new player
-func AddPlayerHandler(c buffalo.Context) error {
+func addPlayerHandler(c buffalo.Context) error {
 	name := &AddPlayerRequest{}
 	bindErr := c.Bind(name)
 
@@ -51,7 +53,7 @@ func AddPlayerHandler(c buffalo.Context) error {
 		))
 	}
 
-	playerState, addErr := game.AddPlayer(name.Name)
+	playerState, addErr := game.AddPlayer(&game.GlobalGame, name.Name)
 
 	if addErr != nil {
 		return c.Render(http.StatusInternalServerError, r.JSON(
@@ -67,12 +69,12 @@ func AddPlayerHandler(c buffalo.Context) error {
 
 	return c.Render(http.StatusOK, r.JSON(AddPlayerResponse{
 		PlayerState: *playerState,
-		Board:       game.CurrentGame.Board,
+		Board:       game.GlobalGame.Board,
 	}))
 }
 
 // Handles requests to get a player state
-func GetPlayerStateHandler(c buffalo.Context) error {
+func getPlayerStateHandler(c buffalo.Context) error {
 	request := &GetPlayerStateRequest{}
 	err := c.Bind(request)
 
@@ -82,7 +84,7 @@ func GetPlayerStateHandler(c buffalo.Context) error {
 		))
 	}
 
-	_, playerState, err := game.FindPlayer(game.CurrentGame.Players, request.PlayerId)
+	_, playerState, err := game.FindPlayer(game.GlobalGame.Players, request.PlayerId)
 
 	if err != nil {
 		return c.Render(http.StatusInternalServerError, r.JSON(
@@ -90,14 +92,14 @@ func GetPlayerStateHandler(c buffalo.Context) error {
 		))
 	}
 
-	return c.Render(http.StatusOK, r.JSON(AddPlayerResponse{
+	return c.Render(http.StatusOK, r.JSON(GetPlayerStateResponse{
 		PlayerState: *playerState,
-		Board:       game.CurrentGame.Board,
+		Board:       game.GlobalGame.Board,
 	}))
 }
 
 // Handles requests to play a card
-func PlayCardHandler(c buffalo.Context) error {
+func playCardHandler(c buffalo.Context) error {
 	request := &PlayCardRequest{}
 	errOnBind := c.Bind(request)
 
@@ -107,7 +109,7 @@ func PlayCardHandler(c buffalo.Context) error {
 		))
 	}
 
-	errOnPlay := game.PlayCard(request.Card, request.ID)
+	errOnPlay := game.PlayCard(&game.GlobalGame, request.Card, request.ID)
 
 	if errOnPlay != nil {
 		return c.Render(http.StatusInternalServerError, r.JSON(
@@ -115,7 +117,7 @@ func PlayCardHandler(c buffalo.Context) error {
 		))
 	}
 
-	_, requestedPlayerState, errOnFind := game.FindPlayer(game.CurrentGame.Players, request.ID)
+	_, requestedPlayerState, errOnFind := game.FindPlayer(game.GlobalGame.Players, request.ID)
 
 	if errOnFind != nil {
 		return c.Render(http.StatusInternalServerError, r.JSON(
@@ -126,7 +128,7 @@ func PlayCardHandler(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(
 		PlayCardResponse{
 			PlayerState: *requestedPlayerState,
-			Board:       game.CurrentGame.Board,
+			Board:       game.GlobalGame.Board,
 		},
 	))
 }

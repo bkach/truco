@@ -10,7 +10,7 @@ func Test_NewGame_HasExpectedState(t *testing.T) {
 	debugOn = true
 
 	// Create a new game
-	StartGame()
+	GlobalGame = StartGame()
 
 	// Check that the game state is as expected
 	expectedGameState := Game{
@@ -60,15 +60,15 @@ func Test_NewGame_HasExpectedState(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedGameState, CurrentGame)
+	assert.Equal(t, expectedGameState, GlobalGame)
 }
 
 func Test_AddPlayer_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	StartGame()
+	GlobalGame = StartGame()
 
-	addedPlayer, err := AddPlayer("boris")
+	addedPlayer, err := AddPlayer(&GlobalGame, "boris")
 
 	assert.NoError(t, err)
 
@@ -141,19 +141,19 @@ func Test_AddPlayer_HasExpectedState(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedGameState, CurrentGame)
+	assert.Equal(t, expectedGameState, GlobalGame)
 }
 
 func Test_PlayCard_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	StartGame()
+	GlobalGame = StartGame()
 
-	_, err := AddPlayer("boris")
+	_, err := AddPlayer(&GlobalGame, "boris")
 
 	assert.NoError(t, err)
 
-	playCardErr := PlayCard(Card{1, Spades}, "player_boris")
+	playCardErr := PlayCard(&GlobalGame, Card{1, Spades}, "player_boris")
 
 	assert.NoError(t, playCardErr)
 
@@ -223,19 +223,19 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedGameState, CurrentGame)
+	assert.Equal(t, expectedGameState, GlobalGame)
 }
 
 func Test_PlayInvalidCard_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
 	debugOn = true
 
-	StartGame()
+	GlobalGame = StartGame()
 
-	_, err := AddPlayer("boris")
+	_, err := AddPlayer(&GlobalGame, "boris")
 
 	assert.NoError(t, err)
 
-	playCardErr := PlayCard(Card{10, Spades}, "player_boris")
+	playCardErr := PlayCard(&GlobalGame, Card{10, Spades}, "player_boris")
 
 	assert.Error(t, playCardErr)
 
@@ -304,19 +304,19 @@ func Test_PlayInvalidCard_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedGameState, CurrentGame)
+	assert.Equal(t, expectedGameState, GlobalGame)
 }
 
 func Test_PlayInvalidPlayer_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
 	debugOn = true
 
-	StartGame()
+	GlobalGame = StartGame()
 
-	_, err := AddPlayer("boris")
+	_, err := AddPlayer(&GlobalGame, "boris")
 
 	assert.NoError(t, err)
 
-	playCardErr := PlayCard(Card{1, Spades}, "some other player")
+	playCardErr := PlayCard(&GlobalGame, Card{1, Spades}, "some other player")
 
 	assert.Error(t, playCardErr)
 
@@ -385,5 +385,5 @@ func Test_PlayInvalidPlayer_ThrowsErrorAndDoesNotChangeState(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedGameState, CurrentGame)
+	assert.Equal(t, expectedGameState, GlobalGame)
 }
