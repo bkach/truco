@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gobuffalo/buffalo"
+	"github.com/truco_backend/game"
 )
 
 type AddPlayerRequest struct {
@@ -11,8 +12,8 @@ type AddPlayerRequest struct {
 }
 
 type AddPlayerResponse struct {
-	PlayerState PlayerState
-	Board       []Card
+	PlayerState game.PlayerState
+	Board       []game.Card
 }
 
 type GetPlayerStateRequest struct {
@@ -20,74 +21,92 @@ type GetPlayerStateRequest struct {
 }
 
 type GetPlayerStateResponse struct {
-	PlayerState PlayerState
-	Board       []Card
+	PlayerState game.PlayerState
+	Board       []game.Card
 }
 
 type PlayCardRequest struct {
-	Card Card
+	Card game.Card
 	ID   string
 }
 
 type PlayCardResponse struct {
-	PlayerState PlayerState
-	Board       []Card
+	PlayerState game.PlayerState
+	Board       []game.Card
 }
 
 // Handles requests to start the game
 func NewGameHandler(c buffalo.Context) error {
-	return c.Render(http.StatusOK, r.JSON(startGame()))
+	return c.Render(http.StatusOK, r.JSON(game.StartGame()))
 }
 
 // Handles requests to add a new player
 func AddPlayerHandler(c buffalo.Context) error {
 	name := &AddPlayerRequest{}
-	c.Bind(name)
-
-	game, playerState, err := addPlayer(name.Name)
+	err := c.Bind(name)
 
 	if err != nil {
 		return c.Render(http.StatusBadRequest, r.JSON(
-			map[string]string{"error": err.Error()},
+			map[string]string{"message": err.Error()},
+		))
+	}
+
+	playerState, updatedGame, err := game.AddPlayer(name.Name)
+
+	if err != nil {
+		return c.Render(http.StatusBadRequest, r.JSON(
+			map[string]string{"message": err.Error()},
 		))
 	}
 
 	return c.Render(http.StatusOK, r.JSON(AddPlayerResponse{
 		PlayerState: playerState,
-		Board:       game.Board,
+		Board:       updatedGame.Board,
 	}))
 }
 
 // Handles requests to get a player state
 func GetPlayerStateHandler(c buffalo.Context) error {
 	request := &GetPlayerStateRequest{}
-	c.Bind(request)
-
-	playerState, game, err := GetPlayerState(&currentGame.PlayerStates, request.PlayerId)
+	err := c.Bind(request)
 
 	if err != nil {
 		return c.Render(http.StatusBadRequest, r.JSON(
-			map[string]string{"error": err.Error()},
+			map[string]string{"message": err.Error()},
+		))
+	}
+
+	playerState, updatedGame, err := game.GetPlayerState(&game.CurrentGame.PlayerStates, request.PlayerId)
+
+	if err != nil {
+		return c.Render(http.StatusBadRequest, r.JSON(
+			map[string]string{"message": err.Error()},
 		))
 	}
 
 	return c.Render(http.StatusOK, r.JSON(AddPlayerResponse{
 		PlayerState: *playerState,
-		Board:       game.Board,
+		Board:       updatedGame.Board,
 	}))
 }
 
 // Handles requests to play a card
 func PlayCardHandler(c buffalo.Context) error {
 	request := &PlayCardRequest{}
-	c.Bind(request)
+	err := c.Bind(request)
 
-	playerState, game, _ := playCard(request.Card, request.ID)
+	if err != nil {
+		return c.Render(http.StatusBadRequest, r.JSON(
+			map[string]string{"message": err.Error()},
+		))
+	}
+
+	playerState, updatedGame, _ := game.PlayCard(request.Card, request.ID)
 
 	return c.Render(http.StatusOK, r.JSON(
 		PlayCardResponse{
 			PlayerState: playerState,
-			Board:       game.Board,
+			Board:       updatedGame.Board,
 		},
 	))
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/gobuffalo/suite"
 )
 
+// This file is possibly useful if i'd like to test it end-to-end
+
 type ActionSuite struct {
 	*suite.Action
 }

@@ -1,4 +1,4 @@
-package actions
+package game
 
 import (
 	"errors"
@@ -16,21 +16,25 @@ type PlayerState struct {
 	Hand []Card
 }
 
-func addPlayer(name string) (Game, PlayerState, error) {
+func AddPlayer(name string) (PlayerState, Game, error) {
 	if len(currentDeck) < 3 {
-		return currentGame, PlayerState{}, errors.New("Deck not big enough to make a new hand")
+		return PlayerState{}, CurrentGame, errors.New("deck not big enough to make a new hand")
 	}
 
-	if len(currentGame.PlayerStates) == 4 {
-		return currentGame, PlayerState{}, errors.New("No more new players can be added")
+	if len(CurrentGame.PlayerStates) == 4 {
+		return PlayerState{}, CurrentGame, errors.New("no more new players can be added")
 	}
 
-	uuid, _ := uuid.NewV4()
+	playerUUID, err := uuid.NewV4()
+
+	if err != nil {
+		return PlayerState{}, CurrentGame, errors.New("error making UUID")
+	}
 
 	// For testing
 	var playerId string
 	if debugOn {
-		playerId = "player_" + uuid.String()
+		playerId = "player_" + playerUUID.String()
 	} else {
 		playerId = "player_" + name
 	}
@@ -47,17 +51,17 @@ func addPlayer(name string) (Game, PlayerState, error) {
 		},
 	}
 
-	currentGame = Game{
-		Board:        currentGame.Board,
-		PlayerStates: append(currentGame.PlayerStates, newPlayer),
+	CurrentGame = Game{
+		Board:        CurrentGame.Board,
+		PlayerStates: append(CurrentGame.PlayerStates, newPlayer),
 	}
 
-	return currentGame, newPlayer, nil
+	return newPlayer, CurrentGame, nil
 }
 
 func GetPlayerState(playerStates *[]PlayerState, playerId string) (*PlayerState, Game, error) {
 	_, player, err := findPlayer(playerStates, playerId)
-	return player, currentGame, err
+	return player, CurrentGame, err
 }
 
 func findPlayer(playerStates *[]PlayerState, playerId string) (int, *PlayerState, error) {

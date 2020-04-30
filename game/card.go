@@ -1,4 +1,4 @@
-package actions
+package game
 
 import (
 	"fmt"

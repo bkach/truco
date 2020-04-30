@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/Masterminds/semver/v3 v3.1.0 // indirect
+	github.com/amitbet/gorename v0.0.0-20190107054843-300b577db37e // indirect
 	github.com/cockroachdb/cockroach-go v0.0.0-20200411195601-6f5842749cfc // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gobuffalo/buffalo v0.16.8
@@ -20,8 +21,6 @@ require (
 	github.com/gobuffalo/validate/v3 v3.3.0 // indirect
 	github.com/gobuffalo/x v0.1.0
 	github.com/gofrs/uuid v3.2.0+incompatible
-	github.com/google/uuid v1.1.1
-	github.com/jackc/pgconn v1.5.0 // indirect
 	github.com/karrick/godirwalk v1.15.6 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/lib/pq v1.4.0 // indirect
@@ -29,6 +28,7 @@ require (
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/rs/cors v1.7.0
 	github.com/spf13/cobra v1.0.0 // indirect
+	github.com/stretchr/testify v1.5.1
 	github.com/unrolled/secure v1.0.7
 	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0 // indirect

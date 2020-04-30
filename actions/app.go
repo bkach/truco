@@ -57,6 +57,7 @@ func App() *buffalo.App {
 		// Remove to disable this.
 		app.Use(popmw.Transaction(models.DB))
 
+		// Custom endpoints
 		app.GET("/newGame", NewGameHandler)
 		app.POST("/addPlayer", AddPlayerHandler)
 		app.POST("/player", GetPlayerStateHandler)
