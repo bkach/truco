@@ -1,35 +1,137 @@
-# Welcome to Buffalo!
+# Truco Backend [WIP]
 
-Thank you for choosing Buffalo for your web development needs.
+This Repo is a simple backend for the game [Truco](https://en.wikipedia.org/wiki/Truco) written in [go](https://golang.org/).
 
-## Database Setup
+## Endpoints and Documentation
 
-It looks like you chose to set up your application using a database! Fantastic!
+### ``GET/newGame`
 
-The first thing you need to do is open up the "database.yml" file and edit it to use the correct usernames, passwords, hosts, etc... that are appropriate for your environment.
+Starts a new game and builds a deck
 
-You will also need to make sure that **you** start/install the database of your choice. Buffalo **won't** install and start it for you.
+### ``POST /addPlayer`
 
-### Create Your Databases
+Adds a player to the game
 
-Ok, so you've edited the "database.yml" file and started your database, now Buffalo can create the databases in that file for you:
+#### Request
 
-	$ buffalo pop create -a
+```
+{
+	"name": "my player's name"
+}
+```
 
-## Starting the Application
+#### Response
 
-Buffalo ships with a command that will watch your application and automatically rebuild the Go binary and any assets for you. To do that run the "buffalo dev" command:
+```
+{
+    "PlayerState": {
+        "Info": {
+            "Name": "boris",
+            "ID": "player_boris"
+        },
+        "Hand": [
+            {
+                "value": 1,
+                "house": "clubs"
+            },
+            {
+                "value": 2,
+                "house": "gold"
+            },
+            {
+                "value": 2,
+                "house": "cups"
+            }
+        ]
+    },
+    "Board": []
+}
+```
 
-	$ buffalo dev
+### ``POST /player`
 
-If you point your browser to [http://127.0.0.1:3000](http://127.0.0.1:3000) you should see a "Welcome to Buffalo!" page.
+Gets information on a given player
 
-**Congratulations!** You now have your Buffalo application up and running.
+#### Request
 
-## What Next?
+```
+{
+	"playerId": "player_boris"
+}
+```
 
-We recommend you heading over to [http://gobuffalo.io](http://gobuffalo.io) and reviewing all of the great documentation there.
+#### Response
 
-Good luck!
+```
+{
+    "PlayerState": {
+        "Info": {
+            "Name": "boris",
+            "ID": "player_boris"
+        },
+        "Hand": [
+            {
+                "value": 1,
+                "house": "cups"
+            },
+            {
+                "value": 2,
+                "house": "gold"
+            },
+            {
+                "value": 2,
+                "house": "cups"
+            },
+        ]
+    },
+    "Board": []
+}
+```
 
-[Powered by Buffalo](http://gobuffalo.io)
+### ``POST /playCard`
+
+Gets information on a given player
+
+#### Request
+
+```
+{
+	"ID" : "player_boris",
+	"card": {
+		"value": 1, "house": "cups"
+	}
+}
+```
+
+#### Response
+
+```
+{
+    "PlayerState": {
+        "Info": {
+            "Name": "boris",
+            "ID": "player_boris"
+        },
+        "Hand": [
+            {
+                "value": 2,
+                "house": "gold"
+            },
+            {
+                "value": 2,
+                "house": "cups"
+            },
+        ]
+    },
+    "Board": [
+            {
+                "value": 1,
+                "house": "cups"
+            }
+    ]
+}
+```
+
+## ToDo
+
+Quite a lot. WIP!
