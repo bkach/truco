@@ -1,7 +1,6 @@
 package actions
 
 import (
-	"fmt"
 	"github.com/gobuffalo/buffalo"
 	"github.com/truco_backend/game"
 	"net/http"
@@ -36,24 +35,66 @@ type GetGameIdsResponse struct {
 	GameIds []string
 }
 
+type GetGameRequest struct {
+	GameId string
+}
+
+type GetGameResponse struct {
+	Board   []game.Card
+	Players []PlayerResponse
+}
+
+type PlayerResponse struct {
+	Name string
+	Hand []game.Card
+	ID   string
+}
+
+type DealCardsRequest struct {
+	GameId string
+}
+
 // Handles requests to start the game
 func createGameHandler(c buffalo.Context) error {
-	fmt.Print("\n\nIn the handler\n\n")
 	gameId, err := game.CreateGameAndAddToGames()
 
 	if err != nil {
 		return renderError(c, err)
 	}
 
-	fmt.Printf("%v", game.Games)
 	return c.Render(http.StatusOK, r.JSON(CreateGameResponse{GameId: gameId}))
 }
 
 // Handles requests to get a list of game ids
 func getGameIdsHandler(c buffalo.Context) error {
-	fmt.Printf("%v", game.Games)
 	return c.Render(http.StatusOK, r.JSON(GetGameIdsResponse{
 		GameIds: game.GetGameIds(game.Games),
+	}))
+}
+
+// Handles requests to get a list of game ids
+func getGameHandler(c buffalo.Context) error {
+	request := &GetGameRequest{}
+	err := c.Bind(request)
+
+	if err != nil {
+		return renderError(c, err)
+	}
+
+	selectedGame := game.Games[request.GameId]
+
+	var playerResponse []PlayerResponse
+	for key, playerState := range selectedGame.Players {
+		playerResponse = append(playerResponse, PlayerResponse{
+			Name: playerState.Name,
+			Hand: playerState.Hand,
+			ID:   key,
+		})
+	}
+
+	return c.Render(http.StatusOK, r.JSON(GetGameResponse{
+		Board:   selectedGame.Board,
+		Players: playerResponse,
 	}))
 }
 
@@ -72,7 +113,6 @@ func addPlayerHandler(c buffalo.Context) error {
 		return renderError(c, err)
 	}
 
-	fmt.Printf("%v", game.Games)
 	return c.Render(http.StatusOK, nil)
 }
 
@@ -85,7 +125,6 @@ func getPlayerStateHandler(c buffalo.Context) error {
 		return renderError(c, err)
 	}
 
-	fmt.Printf("%v", game.Games)
 	return c.Render(http.StatusOK, r.JSON(GetPlayerStateResponse{
 		PlayerState: game.Games[request.GameId].Players[request.PlayerId],
 		Board:       game.Games[request.GameId].Board,
@@ -103,7 +142,23 @@ func playCardHandler(c buffalo.Context) error {
 
 	err = game.PlayCard(game.Games, request.Card, request.GameId, request.PlayerId)
 
-	fmt.Printf("%v", game.Games)
+	return c.Render(http.StatusOK, nil)
+}
+
+func dealCardsHandler(c buffalo.Context) error {
+	request := &DealCardsRequest{}
+	err := c.Bind(request)
+
+	if err != nil {
+		return renderError(c, err)
+	}
+
+	err = game.DealCards(game.Games, request.GameId)
+
+	if err != nil {
+		return renderError(c, err)
+	}
+
 	return c.Render(http.StatusOK, nil)
 }
 

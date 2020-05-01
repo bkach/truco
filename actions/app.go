@@ -60,6 +60,8 @@ func App() *buffalo.App {
 		// Custom endpoints
 		app.GET("/createGame", createGameHandler)
 		app.GET("/gameIds", getGameIdsHandler)
+		app.POST("/game", getGameHandler)
+		app.POST("/dealCards", dealCardsHandler)
 		app.POST("/addPlayer", addPlayerHandler)
 		app.POST("/playerState", getPlayerStateHandler)
 		app.POST("/playCard", playCardHandler)
