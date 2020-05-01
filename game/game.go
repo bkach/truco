@@ -107,17 +107,8 @@ func AddPlayer(games map[string]Game, gameId string, name string) error {
 		return err
 	}
 
-	//newDeck := dealPlayerIn(games[gameId].Deck, newPlayerState)
-
 	// Add player to the map
 	games[gameId].Players[newPlayerId] = *newPlayerState
-
-	// Update game
-	//games[gameId] = Game{
-	//	Board:   games[gameId].Board,
-	//	Players: games[gameId].Players,
-	//	Deck:    newDeck,
-	//}
 
 	return nil
 }
