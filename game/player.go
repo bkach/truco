@@ -5,21 +5,16 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type PlayerInfo struct {
-	Name string
-	ID   string
-}
-
 type PlayerState struct {
-	Info PlayerInfo
+	Name string
 	Hand []Card
 }
 
-func createPlayer(game *Game, name string) (*PlayerState, error) {
+func createPlayer(name string) (string, *PlayerState, error) {
 	playerUUID, err := uuid.NewV4()
 
 	if err != nil {
-		return nil, errors.New("error making UUID")
+		return "", nil, errors.New("error making UUID")
 	}
 
 	// For testing
@@ -30,36 +25,18 @@ func createPlayer(game *Game, name string) (*PlayerState, error) {
 		playerId = "player_" + playerUUID.String()
 	}
 
-	var hand []Card
-	for i := 0; i < NumCardsInHand; i++ {
-		hand = append(hand, popRandomCard(&game.deck))
-	}
-
-	return &PlayerState{
-		Info: PlayerInfo{
-			Name: name,
-			ID:   playerId,
-		},
-		Hand: hand,
+	return playerId, &PlayerState{
+		Name: name,
 	}, nil
 }
 
-func FindPlayer(games []Game, gameId string, playerId string) (int, *PlayerState, error) {
-	gameIndex, err := FindGameIndex(games, gameId)
-
-	if err != nil {
-		return 0, nil, errors.New("cannot find game " + gameId)
+func dealPlayerIn(deck []Card, player *PlayerState) (*PlayerState, []Card) {
+	var hand []Card
+	for i := 0; i < NumCardsInHand; i++ {
+		hand = append(hand, popRandomCard(&deck))
 	}
 
-	var playerNames []string
-	playerStates := games[gameIndex].Players
+	player.Hand = hand
 
-	for i, v := range playerStates {
-		if v.Info.ID == playerId {
-			playerNames = append(playerNames, v.Info.ID)
-			return i, &v, nil
-		}
-	}
-
-	return -1, nil, errors.New("can't find player " + playerId + " in game " + games[gameIndex].ID)
+	return player, deck
 }

@@ -85,22 +85,10 @@ func getPlayerStateHandler(c buffalo.Context) error {
 		return renderError(c, err)
 	}
 
-	gameIndex, err := game.FindGameIndex(game.Games, request.GameId)
-
-	if err != nil {
-		return renderError(c, err)
-	}
-
-	_, playerState, err := game.FindPlayer(game.Games, request.GameId, request.PlayerId)
-
-	if err != nil {
-		return renderError(c, err)
-	}
-
 	fmt.Printf("%v", game.Games)
 	return c.Render(http.StatusOK, r.JSON(GetPlayerStateResponse{
-		PlayerState: *playerState,
-		Board:       game.Games[gameIndex].Board,
+		PlayerState: game.Games[request.GameId].Players[request.PlayerId],
+		Board:       game.Games[request.GameId].Board,
 	}))
 }
 

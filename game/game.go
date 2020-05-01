@@ -10,33 +10,32 @@ const MaxPlayers = 4
 const NumCardsInHand = 3
 
 type Game struct {
-	ID      string
 	Board   []Card
-	Players []PlayerState
-	deck    []Card
+	Players map[string]PlayerState
+	Deck    []Card
 }
 
 // Global state
-var Games []Game
+var Games = map[string]Game{}
 var debugOn = false
 
 func CreateGameAndAddToGames() (string, error) {
-	newGame, err := createGame()
+	gameId, newGame, err := createGame()
 
 	if err != nil {
 		return "", err
 	}
 
-	Games = append(Games, *newGame)
+	Games[gameId] = *newGame
 
-	return newGame.ID, nil
+	return gameId, nil
 }
 
-func createGame() (*Game, error) {
+func createGame() (string, *Game, error) {
 	gameUUID, err := uuid.NewV4()
 
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
 	// For testing
@@ -49,80 +48,98 @@ func createGame() (*Game, error) {
 
 	game := Game{
 		Board:   []Card{},
-		Players: []PlayerState{},
-		deck:    buildDeck(),
-		ID:      gameId,
+		Players: map[string]PlayerState{},
+		Deck:    buildDeck(),
 	}
 
-	return &game, nil
+	return gameId, &game, nil
 }
 
-func FindGameIndex(games []Game, gameId string) (int, error) {
-	for index, game := range games {
-		if game.ID == gameId {
-			return index, nil
-		}
-	}
-	return -1, errors.New("cannot find game " + gameId)
-}
-
-func GetGameIds(games []Game) []string {
-	var gameIds []string
-	for _, selectedGame := range games {
-		gameIds = append(gameIds, selectedGame.ID)
+func GetGameIds(games map[string]Game) []string {
+	gameIds := make([]string, 0, len(games))
+	for gameId := range games {
+		gameIds = append(gameIds, gameId)
 	}
 
 	return gameIds
 }
 
-func PlayCard(games []Game, card Card, gameId string, playerId string) error {
-	gameIndex, err := FindGameIndex(games, gameId)
-
-	if err != nil {
-		return err
-	}
-
-	playerIndex, _, err := FindPlayer(games, gameId, playerId)
-
-	if err != nil {
-		return err
-	}
-
-	playerHand := &games[gameIndex].Players[playerIndex].Hand
+func PlayCard(games map[string]Game, card Card, gameId string, playerId string) error {
+	playerHand := games[gameId].Players[playerId].Hand
+	board := games[gameId].Board
 
 	index, err := findCardIndex(playerHand, card)
 	if err != nil {
 		return err
 	}
 
-	removeCard(playerHand, index)
-	addCard(&games[gameIndex].Board, card)
+	removeCard(&playerHand, index)
+	addCard(&board, card)
+
+	// Update player in the map
+	games[gameId].Players[playerId] = PlayerState{
+		Name: games[gameId].Players[playerId].Name,
+		Hand: playerHand, // Updated value
+	}
+
+	// Update game
+	games[gameId] = Game{
+		Board:   board, // Updated value
+		Players: games[gameId].Players,
+		Deck:    games[gameId].Deck,
+	}
 
 	return nil
 }
 
-func AddPlayer(games []Game, gameId string, name string) error {
-	gameIndex, err := FindGameIndex(games, gameId)
+func AddPlayer(games map[string]Game, gameId string, name string) error {
+	if len(games[gameId].Deck) < NumCardsInHand {
+		return errors.New("deck not big enough to make a new hand")
+	}
+
+	if len(games[gameId].Players) == MaxPlayers {
+		return errors.New("no more new players can be added")
+	}
+
+	newPlayerId, newPlayerState, err := createPlayer(name)
 
 	if err != nil {
 		return err
 	}
 
-	if len(games[gameIndex].deck) < NumCardsInHand {
-		return errors.New("deck not big enough to make a new hand")
+	//newDeck := dealPlayerIn(games[gameId].Deck, newPlayerState)
+
+	// Add player to the map
+	games[gameId].Players[newPlayerId] = *newPlayerState
+
+	// Update game
+	//games[gameId] = Game{
+	//	Board:   games[gameId].Board,
+	//	Players: games[gameId].Players,
+	//	Deck:    newDeck,
+	//}
+
+	return nil
+}
+
+func DealCards(games map[string]Game, gameId string) error {
+	if len(games[gameId].Deck) < NumCardsInHand*len(games[gameId].Players) {
+		return errors.New("deck not big enough to deal cards")
 	}
 
-	if len(games[gameIndex].Players) == MaxPlayers {
-		return errors.New("no more new players can be added")
+	newDeck := games[gameId].Deck
+	for playerId, player := range games[gameId].Players {
+		player, deck := dealPlayerIn(newDeck, &player)
+		newDeck = deck
+
+		games[gameId].Players[playerId] = *player
 	}
 
-	newPlayer, err := createPlayer(&games[gameIndex], name)
-
-	if err != nil {
-		return errors.New("error creating player")
+	games[gameId] = Game{
+		Board:   games[gameId].Board,
+		Players: games[gameId].Players,
+		Deck:    newDeck,
 	}
-
-	games[gameIndex].Players = append(games[gameIndex].Players, *newPlayer)
 
 	return nil
 }
