@@ -58,9 +58,10 @@ func App() *buffalo.App {
 		app.Use(popmw.Transaction(models.DB))
 
 		// Custom endpoints
-		app.GET("/newGame", newGameHandler)
+		app.GET("/createGame", createGameHandler)
+		app.GET("/gameIds", getGameIdsHandler)
 		app.POST("/addPlayer", addPlayerHandler)
-		app.POST("/player", getPlayerStateHandler)
+		app.POST("/playerState", getPlayerStateHandler)
 		app.POST("/playCard", playCardHandler)
 	}
 

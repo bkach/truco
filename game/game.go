@@ -2,38 +2,93 @@ package game
 
 import (
 	"errors"
+	"github.com/gofrs/uuid"
+	"strconv"
 )
 
 const MaxPlayers = 4
 const NumCardsInHand = 3
 
 type Game struct {
+	ID      string
 	Board   []Card
 	Players []PlayerState
-	Deck    []Card
+	deck    []Card
 }
 
 // Global state
-var GlobalGame Game
+var Games []Game
 var debugOn = false
 
-func StartGame() Game {
+func CreateGameAndAddToGames() (string, error) {
+	newGame, err := createGame()
+
+	if err != nil {
+		return "", err
+	}
+
+	Games = append(Games, *newGame)
+
+	return newGame.ID, nil
+}
+
+func createGame() (*Game, error) {
+	gameUUID, err := uuid.NewV4()
+
+	if err != nil {
+		return nil, err
+	}
+
+	// For testing
+	var gameId string
+	if debugOn {
+		gameId = "game_" + strconv.Itoa(len(Games))
+	} else {
+		gameId = "game_" + gameUUID.String()
+	}
+
 	game := Game{
 		Board:   []Card{},
 		Players: []PlayerState{},
-		Deck:    buildDeck(),
+		deck:    buildDeck(),
+		ID:      gameId,
 	}
-	return game
+
+	return &game, nil
 }
 
-func PlayCard(game *Game, card Card, playerId string) error {
-	playerIndex, _, err := FindPlayer(game.Players, playerId)
+func FindGameIndex(games []Game, gameId string) (int, error) {
+	for index, game := range games {
+		if game.ID == gameId {
+			return index, nil
+		}
+	}
+	return -1, errors.New("cannot find game " + gameId)
+}
+
+func GetGameIds(games []Game) []string {
+	var gameIds []string
+	for _, selectedGame := range games {
+		gameIds = append(gameIds, selectedGame.ID)
+	}
+
+	return gameIds
+}
+
+func PlayCard(games []Game, card Card, gameId string, playerId string) error {
+	gameIndex, err := FindGameIndex(games, gameId)
 
 	if err != nil {
 		return err
 	}
 
-	playerHand := &game.Players[playerIndex].Hand
+	playerIndex, _, err := FindPlayer(games, gameId, playerId)
+
+	if err != nil {
+		return err
+	}
+
+	playerHand := &games[gameIndex].Players[playerIndex].Hand
 
 	index, err := findCardIndex(playerHand, card)
 	if err != nil {
@@ -41,27 +96,33 @@ func PlayCard(game *Game, card Card, playerId string) error {
 	}
 
 	removeCard(playerHand, index)
-	addCard(&game.Board, card)
+	addCard(&games[gameIndex].Board, card)
 
 	return nil
 }
 
-func AddPlayer(game *Game, name string) (*PlayerState, error) {
-	if len(game.Deck) < NumCardsInHand {
-		return nil, errors.New("deck not big enough to make a new hand")
-	}
-
-	if len(game.Players) == MaxPlayers {
-		return nil, errors.New("no more new players can be added")
-	}
-
-	newPlayer, err := createPlayer(game, name)
+func AddPlayer(games []Game, gameId string, name string) error {
+	gameIndex, err := FindGameIndex(games, gameId)
 
 	if err != nil {
-		return nil, errors.New("error creating player")
+		return err
 	}
 
-	game.Players = append(game.Players, *newPlayer)
+	if len(games[gameIndex].deck) < NumCardsInHand {
+		return errors.New("deck not big enough to make a new hand")
+	}
 
-	return newPlayer, nil
+	if len(games[gameIndex].Players) == MaxPlayers {
+		return errors.New("no more new players can be added")
+	}
+
+	newPlayer, err := createPlayer(&games[gameIndex], name)
+
+	if err != nil {
+		return errors.New("error creating player")
+	}
+
+	games[gameIndex].Players = append(games[gameIndex].Players, *newPlayer)
+
+	return nil
 }

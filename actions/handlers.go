@@ -1,22 +1,23 @@
 package actions
 
 import (
-	"net/http"
-
+	"fmt"
 	"github.com/gobuffalo/buffalo"
 	"github.com/truco_backend/game"
+	"net/http"
 )
 
-type AddPlayerRequest struct {
-	Name string
+type CreateGameResponse struct {
+	GameId string
 }
 
-type AddPlayerResponse struct {
-	PlayerState game.PlayerState
-	Board       []game.Card
+type AddPlayerRequest struct {
+	GameId string
+	Name   string
 }
 
 type GetPlayerStateRequest struct {
+	GameId   string
 	PlayerId string
 }
 
@@ -26,51 +27,53 @@ type GetPlayerStateResponse struct {
 }
 
 type PlayCardRequest struct {
-	Card game.Card
-	ID   string
+	GameId   string
+	PlayerId string
+	Card     game.Card
 }
 
-type PlayCardResponse struct {
-	PlayerState game.PlayerState
-	Board       []game.Card
+type GetGameIdsResponse struct {
+	GameIds []string
 }
 
 // Handles requests to start the game
-func newGameHandler(c buffalo.Context) error {
-	game.GlobalGame = game.StartGame()
+func createGameHandler(c buffalo.Context) error {
+	fmt.Print("\n\nIn the handler\n\n")
+	gameId, err := game.CreateGameAndAddToGames()
 
-	return c.Render(http.StatusOK, r.JSON(game.GlobalGame))
+	if err != nil {
+		return renderError(c, err)
+	}
+
+	fmt.Printf("%v", game.Games)
+	return c.Render(http.StatusOK, r.JSON(CreateGameResponse{GameId: gameId}))
+}
+
+// Handles requests to get a list of game ids
+func getGameIdsHandler(c buffalo.Context) error {
+	fmt.Printf("%v", game.Games)
+	return c.Render(http.StatusOK, r.JSON(GetGameIdsResponse{
+		GameIds: game.GetGameIds(game.Games),
+	}))
 }
 
 // Handles requests to add a new player
 func addPlayerHandler(c buffalo.Context) error {
-	name := &AddPlayerRequest{}
-	bindErr := c.Bind(name)
+	request := &AddPlayerRequest{}
+	err := c.Bind(request)
 
-	if bindErr != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": bindErr.Error()},
-		))
+	if err != nil {
+		return renderError(c, err)
 	}
 
-	playerState, addErr := game.AddPlayer(&game.GlobalGame, name.Name)
+	err = game.AddPlayer(game.Games, request.GameId, request.Name)
 
-	if addErr != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": addErr.Error()},
-		))
+	if err != nil {
+		return renderError(c, err)
 	}
 
-	if playerState == nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": "player could not be created"},
-		))
-	}
-
-	return c.Render(http.StatusOK, r.JSON(AddPlayerResponse{
-		PlayerState: *playerState,
-		Board:       game.GlobalGame.Board,
-	}))
+	fmt.Printf("%v", game.Games)
+	return c.Render(http.StatusOK, nil)
 }
 
 // Handles requests to get a player state
@@ -79,56 +82,45 @@ func getPlayerStateHandler(c buffalo.Context) error {
 	err := c.Bind(request)
 
 	if err != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": err.Error()},
-		))
+		return renderError(c, err)
 	}
 
-	_, playerState, err := game.FindPlayer(game.GlobalGame.Players, request.PlayerId)
+	gameIndex, err := game.FindGameIndex(game.Games, request.GameId)
 
 	if err != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": err.Error()},
-		))
+		return renderError(c, err)
 	}
 
+	_, playerState, err := game.FindPlayer(game.Games, request.GameId, request.PlayerId)
+
+	if err != nil {
+		return renderError(c, err)
+	}
+
+	fmt.Printf("%v", game.Games)
 	return c.Render(http.StatusOK, r.JSON(GetPlayerStateResponse{
 		PlayerState: *playerState,
-		Board:       game.GlobalGame.Board,
+		Board:       game.Games[gameIndex].Board,
 	}))
 }
 
 // Handles requests to play a card
 func playCardHandler(c buffalo.Context) error {
 	request := &PlayCardRequest{}
-	errOnBind := c.Bind(request)
+	err := c.Bind(request)
 
-	if errOnBind != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": errOnBind.Error()},
-		))
+	if err != nil {
+		return renderError(c, err)
 	}
 
-	errOnPlay := game.PlayCard(&game.GlobalGame, request.Card, request.ID)
+	err = game.PlayCard(game.Games, request.Card, request.GameId, request.PlayerId)
 
-	if errOnPlay != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": errOnPlay.Error()},
-		))
-	}
+	fmt.Printf("%v", game.Games)
+	return c.Render(http.StatusOK, nil)
+}
 
-	_, requestedPlayerState, errOnFind := game.FindPlayer(game.GlobalGame.Players, request.ID)
-
-	if errOnFind != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(
-			map[string]string{"message": errOnFind.Error()},
-		))
-	}
-
-	return c.Render(http.StatusOK, r.JSON(
-		PlayCardResponse{
-			PlayerState: *requestedPlayerState,
-			Board:       game.GlobalGame.Board,
-		},
+func renderError(c buffalo.Context, err error) error {
+	return c.Render(http.StatusInternalServerError, r.JSON(
+		map[string]string{"message": err.Error()},
 	))
 }

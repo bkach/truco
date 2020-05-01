@@ -32,7 +32,7 @@ func createPlayer(game *Game, name string) (*PlayerState, error) {
 
 	var hand []Card
 	for i := 0; i < NumCardsInHand; i++ {
-		hand = append(hand, popRandomCard(&game.Deck))
+		hand = append(hand, popRandomCard(&game.deck))
 	}
 
 	return &PlayerState{
@@ -44,8 +44,15 @@ func createPlayer(game *Game, name string) (*PlayerState, error) {
 	}, nil
 }
 
-func FindPlayer(playerStates []PlayerState, playerId string) (int, *PlayerState, error) {
+func FindPlayer(games []Game, gameId string, playerId string) (int, *PlayerState, error) {
+	gameIndex, err := FindGameIndex(games, gameId)
+
+	if err != nil {
+		return 0, nil, errors.New("cannot find game " + gameId)
+	}
+
 	var playerNames []string
+	playerStates := games[gameIndex].Players
 
 	for i, v := range playerStates {
 		if v.Info.ID == playerId {
@@ -54,5 +61,5 @@ func FindPlayer(playerStates []PlayerState, playerId string) (int, *PlayerState,
 		}
 	}
 
-	return -1, nil, errors.New("can't find player")
+	return -1, nil, errors.New("can't find player " + playerId + " in game " + games[gameIndex].ID)
 }
