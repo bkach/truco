@@ -6,8 +6,8 @@ import (
 )
 
 type PlayerState struct {
-	Name string
-	Hand []Card
+	Name string `json:"name"`
+	Hand []Card `json:"cards"`
 }
 
 func createPlayer(name string) (string, *PlayerState, error) {

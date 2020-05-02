@@ -7,51 +7,51 @@ import (
 )
 
 type CreateGameResponse struct {
-	GameId string
+	GameId string `json:"game_id"`
 }
 
 type AddPlayerRequest struct {
-	GameId string
-	Name   string
+	GameId string `json:"game_id"`
+	Name   string `json:"name"`
 }
 
 type GetPlayerStateRequest struct {
-	GameId   string
-	PlayerId string
+	GameId   string `json:"game_id"`
+	PlayerId string `json:"player_id"`
 }
 
 type GetPlayerStateResponse struct {
-	PlayerState game.PlayerState
-	Board       []game.Card
+	PlayerResponse PlayerResponse `json:"player_response"`
+	Board          []game.Card    `json:"board"`
 }
 
 type PlayCardRequest struct {
-	GameId   string
-	PlayerId string
-	Card     game.Card
+	GameId   string    `json:"game_id"`
+	PlayerId string    `json:"player_id"`
+	Card     game.Card `json:"card"`
 }
 
 type GetGameIdsResponse struct {
-	GameIds []string
+	GameIds []string `json:"game_ids"`
 }
 
 type GetGameRequest struct {
-	GameId string
+	GameId string `json:"game_id"`
 }
 
 type GetGameResponse struct {
-	Board   []game.Card
-	Players []PlayerResponse
+	Board   []game.Card      `json:"board"`
+	Players []PlayerResponse `json:"players"`
 }
 
 type PlayerResponse struct {
-	Name string
-	Hand []game.Card
-	ID   string
+	Name string      `json:"name"`
+	Hand []game.Card `json:"hand"`
+	ID   string      `json:"id"`
 }
 
 type DealCardsRequest struct {
-	GameId string
+	GameId string `json:"game_id"`
 }
 
 // Handles requests to start the game
@@ -125,9 +125,17 @@ func getPlayerStateHandler(c buffalo.Context) error {
 		return renderError(c, err)
 	}
 
+	player := game.Games[request.GameId].Players[request.PlayerId]
+
+	var playerResponse = PlayerResponse{
+		Name: player.Name,
+		Hand: player.Hand,
+		ID:   request.PlayerId,
+	}
+
 	return c.Render(http.StatusOK, r.JSON(GetPlayerStateResponse{
-		PlayerState: game.Games[request.GameId].Players[request.PlayerId],
-		Board:       game.Games[request.GameId].Board,
+		PlayerResponse: playerResponse,
+		Board:          game.Games[request.GameId].Board,
 	}))
 }
 

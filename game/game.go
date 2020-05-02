@@ -10,9 +10,9 @@ const MaxPlayers = 4
 const NumCardsInHand = 3
 
 type Game struct {
-	Board   []Card
-	Players map[string]PlayerState
-	Deck    []Card
+	Board   []Card                 `json:"board"`
+	Players map[string]PlayerState `json:"players"`
+	Deck    []Card                 `json:"deck"`
 }
 
 // Global state
