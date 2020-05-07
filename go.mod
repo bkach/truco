@@ -1,4 +1,4 @@
-module truco-backend
+module github.com/bkach/truco-backend
 
 go 1.14
 

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/bkach/truco-backend/routers"
 	"log"
 	"net/http"
-	"truco-backend/routers"
 )
 
 func main() {

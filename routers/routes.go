@@ -1,8 +1,8 @@
 package routers
 
 import (
+	"github.com/bkach/truco-backend/handlers"
 	"github.com/gorilla/mux"
-	"truco-backend/handlers"
 )
 
 func BuildRouter() *mux.Router {

@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/bkach/truco-backend/handlers/util"
+	"github.com/bkach/truco-backend/truco"
 	"net/http"
 	"net/url"
-	"truco-backend/handlers/util"
-	"truco-backend/truco"
 )
 
 func GetGamesHandler() http.HandlerFunc {
