@@ -1,33 +1,31 @@
-package handler
+package util
 
 import (
 	"errors"
-	"log"
 	"net/http"
+	"net/url"
 )
-
-func logInternalError(w http.ResponseWriter, err error) {
-	log.Println(err.Error())
-	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-}
 
 // Builds an http.HandlerFunc which decodes the json from the request into the dst struct
 // and subsequently performs the action() function
-func buildHandler(dst interface{}, action func(w http.ResponseWriter)) http.HandlerFunc {
+func BuildHandler(
+	requestBody interface{},
+	action func(w http.ResponseWriter, queryValues url.Values),
+) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if dst != nil {
-			err := decodeJSONBody(w, r, dst)
+		if requestBody != nil {
+			err := decodeJSONBody(w, r, requestBody)
 			if err != nil {
 				var malformedRequest *malformedRequest
 				if errors.As(err, &malformedRequest) {
 					http.Error(w, malformedRequest.msg, malformedRequest.status)
 				} else {
-					logInternalError(w, err)
+					LogInternalError(w, err)
 				}
 				return
 			}
 		}
 
-		action(w)
+		action(w, r.URL.Query())
 	}
 }

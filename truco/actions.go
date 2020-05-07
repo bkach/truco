@@ -28,38 +28,38 @@ func FindGameWithId(id string) (int, *Game, error) {
 	})
 
 	if index == len(Games) {
-		return 0, nil, errors.New("game with id" + id + " not found")
+		return 0, nil, errors.New("game with id " + id + " not found")
 	}
 
 	return index, &Games[index], nil
 }
 
-func AddPlayer(gameId string, name string) error {
+func AddPlayer(gameId string, name string) (string, error) {
 	gameIndex, game, err := FindGameWithId(gameId)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if len(game.Deck) < NumCardsInHand {
-		return errors.New("deck not big enough to make a new hand")
+		return "", errors.New("deck not big enough to make a new hand")
 	}
 
 	if len(game.Players) == MaxPlayers {
-		return errors.New("no more new players can be added")
+		return "", errors.New("no more new players can be added")
 	}
 
 	newPlayerId, newPlayerState, err := createPlayer(name)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	game.Players[newPlayerId] = *newPlayerState
 
 	Games[gameIndex] = *game
 
-	return nil
+	return newPlayerId, nil
 }
 
 func PlayCard(gameId string, playerId string, card Card) error {

@@ -13,18 +13,18 @@ type ${className}Request struct {
 // Handler which ...
 func ${className}Handler() http.HandlerFunc {
 	request := GetGameRequest{}
-	return buildHandler(&request, func(w http.ResponseWriter) {
+	return BuildHandler(&request, func(w http.ResponseWriter, queries url.Values) {
 	    err := Errors.New("test error")
 
 		if err != nil {
-			logInternalError(w, err)
+			LogInternalError(w, err)
 			return
 		}
 
 		err = json.NewEncoder(w).Encode(...)
 
 		if err != nil {
-			logInternalError(w, err)
+			LogInternalError(w, err)
 			return
 		}
 	})

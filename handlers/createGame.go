@@ -1,8 +1,10 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
+	"truco-backend/handlers/util"
 	"truco-backend/truco"
 )
 
@@ -10,13 +12,12 @@ type CreateGameResponse struct {
 	GameId string `json:"game_id"`
 }
 
-// Handler which creates a game
 func CreateGameHandler() http.HandlerFunc {
-	return buildHandler(nil, func(w http.ResponseWriter) {
+	return util.BuildHandler(nil, func(w http.ResponseWriter, queries url.Values) {
 		gameId, err := truco.CreateGameAndAddToGames()
 
 		if err != nil {
-			logInternalError(w, err)
+			util.LogInternalError(w, err)
 			return
 		}
 
@@ -25,7 +26,7 @@ func CreateGameHandler() http.HandlerFunc {
 		})
 
 		if err != nil {
-			logInternalError(w, err)
+			util.LogInternalError(w, err)
 			return
 		}
 	})
