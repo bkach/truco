@@ -1,4 +1,4 @@
-package handler
+package ${GO_PACKAGE_NAME}
 
 import (
 	"encoding/json"
@@ -6,22 +6,22 @@ import (
 	"truco-backend/truco"
 )
 
-type GetGameRequest struct {
+type ${className}Request struct {
 	GameId string `json:"game_id"`
 }
 
-// Handler which gets a specific game of Truco
-func GetGameHandler() http.HandlerFunc {
+// Handler which ...
+func ${className}Handler() http.HandlerFunc {
 	request := GetGameRequest{}
 	return buildHandler(&request, func(w http.ResponseWriter) {
-		_, selectedGame, err := truco.FindGameWithId(request.GameId)
+	    err := Errors.New("test error")
 
 		if err != nil {
 			logInternalError(w, err)
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(selectedGame)
+		err = json.NewEncoder(w).Encode(...)
 
 		if err != nil {
 			logInternalError(w, err)
