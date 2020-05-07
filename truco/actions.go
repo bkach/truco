@@ -7,7 +7,8 @@ import (
 const MaxPlayers = 4
 const NumCardsInHand = 3
 
-// This is the only file that can manipulate the global state
+// This file contains all the actions a user can perform on a game. It is the only file that can manipulate the global
+// state
 
 func CreateGameAndAddToGames() (string, error) {
 	newGame, err := createGame(Games)
