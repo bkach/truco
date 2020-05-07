@@ -2,4 +2,4 @@ package truco
 
 // Global state
 var Games []Game
-var debugOn = false
+var debugOn = true

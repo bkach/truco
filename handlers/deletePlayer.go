@@ -6,13 +6,12 @@ import (
 	"net/http"
 )
 
-type PlayCardRequest struct {
-	Card truco.Card `json:"card"`
+type DeletePlayerRequest struct {
+	GameId string `json:"game_id"`
 }
 
-func PlayCardHandler() http.HandlerFunc {
-	request := PlayCardRequest{}
-	return util.BuildHandler(&request, func(w http.ResponseWriter, queries util.QueryExtractor) {
+func DeletePlayerHandler() http.HandlerFunc {
+	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
 		gameId, err := queries.Query("game_id")
 
 		if err != nil {
@@ -27,7 +26,7 @@ func PlayCardHandler() http.HandlerFunc {
 			return
 		}
 
-		err = truco.PlayCard(gameId, playerId, request.Card)
+		err = truco.DeletePlayer(gameId, playerId)
 
 		if err != nil {
 			util.LogInternalError(w, err)

@@ -23,13 +23,16 @@ func BuildRouter() *mux.Router {
 	// Gets games
 	router.HandleFunc("/games", handlers.GetGamesHandler())
 
-	// Adds a player, query needs a game_id, body needs a name
-	router.HandleFunc("/addPlayer", handlers.AddPlayerHandler())
+	// Creates a player, query needs a game_id and a name for the player
+	router.HandleFunc("/createPlayer", handlers.CreatePlayerHandler())
+
+	// Removes a player, query needs a game_id and a player_id
+	router.HandleFunc("/deletePlayer", handlers.DeletePlayerHandler())
 
 	// Deals in each player for a given game, query needs a game_id
 	router.HandleFunc("/dealCards", handlers.DealCardsHandler())
 
-	// Plays a card in a given player's hand
+	// Plays a card in a given player's hand, query needs a game_id and body needs a Card
 	router.HandleFunc("/playCard", handlers.PlayCardHandler())
 
 	return router

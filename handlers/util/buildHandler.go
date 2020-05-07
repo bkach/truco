@@ -3,14 +3,13 @@ package util
 import (
 	"errors"
 	"net/http"
-	"net/url"
 )
 
 // Builds an http.HandlerFunc which decodes the json from the request into the dst struct
 // and subsequently performs the action() function
 func BuildHandler(
 	requestBody interface{},
-	action func(w http.ResponseWriter, queryValues url.Values),
+	action func(w http.ResponseWriter, queries QueryExtractor),
 ) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestBody != nil {
@@ -26,6 +25,6 @@ func BuildHandler(
 			}
 		}
 
-		action(w, r.URL.Query())
+		action(w, QueryExtractor{values: r.URL.Query()})
 	}
 }

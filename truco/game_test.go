@@ -183,7 +183,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	gameId1, err := CreateGameAndAddToGames()
 	assert.NoError(t, err)
 
-	_, err = AddPlayer(gameId1, "boris")
+	_, err = CreatePlayer(gameId1, "boris")
 	assert.NoError(t, err)
 
 	err = DealCards(gameId1)
@@ -242,7 +242,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 		Board: []Card{},
 		Players: []Player{
 			{
-				Id: "player_boris",
+				Id:   "player_boris",
 				Name: "boris",
 				Hand: []Card{
 					{Value: 1, House: "gold"},
@@ -303,16 +303,16 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 	gameId, err := CreateGameAndAddToGames()
 	assert.NoError(t, err)
 
-	_, err = AddPlayer(gameId, "boris")
+	_, err = CreatePlayer(gameId, "boris")
 	assert.NoError(t, err)
 
-	_, err = AddPlayer(gameId, "papi")
+	_, err = CreatePlayer(gameId, "papi")
 	assert.NoError(t, err)
 
-	_, err = AddPlayer(gameId, "claudio")
+	_, err = CreatePlayer(gameId, "claudio")
 	assert.NoError(t, err)
 
-	_, err = AddPlayer(gameId, "jorge")
+	_, err = CreatePlayer(gameId, "jorge")
 	assert.NoError(t, err)
 
 	err = DealCards(gameId)
@@ -327,7 +327,7 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 		},
 		Players: []Player{
 			{
-				Id: "player_boris",
+				Id:   "player_boris",
 				Name: "boris",
 				Hand: []Card{
 					{Value: 1, House: "cups"},
@@ -335,7 +335,7 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 				},
 			},
 			{
-				Id: "player_papi",
+				Id:   "player_papi",
 				Name: "papi",
 				Hand: []Card{
 					{Value: 1, House: "clubs"},
@@ -344,7 +344,7 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 				},
 			},
 			{
-				Id: "player_claudio",
+				Id:   "player_claudio",
 				Name: "claudio",
 				Hand: []Card{
 					{Value: 2, House: "spades"},
@@ -353,7 +353,7 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 				},
 			},
 			{
-				Id: "player_jorge",
+				Id:   "player_jorge",
 				Name: "jorge",
 				Hand: []Card{
 					{Value: 3, House: "cups"},
@@ -396,7 +396,7 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 
 	cleanup(t)
 
-	assert.Equal(t, []Game{ game }, Games)
+	assert.Equal(t, []Game{game}, Games)
 }
 
 func cleanup(t *testing.T) {
