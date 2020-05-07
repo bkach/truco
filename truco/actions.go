@@ -2,7 +2,6 @@ package truco
 
 import (
 	"errors"
-	"sort"
 )
 
 const MaxPlayers = 4
@@ -23,27 +22,33 @@ func CreateGameAndAddToGames() (string, error) {
 }
 
 func FindGameWithId(id string) (int, *Game, error) {
-	index := sort.Search(len(Games), func(i int) bool {
-		return Games[i].Id == id
-	})
+	gameIndex := -1
+	for index, game := range Games {
+		if game.Id == id {
+			gameIndex = index
+		}
+	}
 
-	if index == len(Games) {
+	if gameIndex == -1 {
 		return 0, nil, errors.New("game with id " + id + " not found")
 	}
 
-	return index, &Games[index], nil
+	return gameIndex, &Games[gameIndex], nil
 }
 
 func FindPlayerWithId(game Game, id string) (int, *Player, error) {
-	index := sort.Search(len(game.Players), func(i int) bool {
-		return game.Players[i].Name == id
-	})
+	playerIndex := -1
+	for index, player := range game.Players {
+		if player.Id == id {
+			playerIndex = index
+		}
+	}
 
-	if index == len(game.Players) {
+	if playerIndex == -1 {
 		return 0, nil, errors.New("player with id " + id + " not found in game " + game.Id)
 	}
 
-	return index, &game.Players[index], nil
+	return playerIndex, &game.Players[playerIndex], nil
 }
 
 func AddPlayer(gameId string, name string) (string, error) {
@@ -99,6 +104,7 @@ func PlayCard(gameId string, playerId string, card Card) error {
 	board = addCard(board, card)
 
 	game.Players[playerIndex] = Player{
+		Id: game.Players[playerIndex].Id,
 		Name: game.Players[playerIndex].Name,
 		Hand: playerHand, // Updated value
 	}
