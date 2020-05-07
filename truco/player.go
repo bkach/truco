@@ -5,16 +5,17 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type PlayerState struct {
+type Player struct {
+	Id	 string	`json:"id"`
 	Name string `json:"name"`
 	Hand []Card `json:"cards"`
 }
 
-func createPlayer(name string) (string, *PlayerState, error) {
+func createPlayer(name string) (*Player, error) {
 	playerUUID, err := uuid.NewV4()
 
 	if err != nil {
-		return "", nil, errors.New("error making UUID")
+		return nil, errors.New("error making UUID")
 	}
 
 	// For testing
@@ -25,12 +26,13 @@ func createPlayer(name string) (string, *PlayerState, error) {
 		playerId = "player_" + playerUUID.String()
 	}
 
-	return playerId, &PlayerState{
+	return &Player{
+		Id: playerId,
 		Name: name,
 	}, nil
 }
 
-func dealPlayerIn(deck []Card, player *PlayerState) (*PlayerState, []Card) {
+func dealPlayerIn(deck []Card, player *Player) (*Player, []Card) {
 	var hand []Card
 
 	var card Card

@@ -14,7 +14,7 @@ func Test_CreateGame_HasExpectedState(t *testing.T) {
 	game := Game{
 		Board:   []Card{},
 		Id:      "game_0",
-		Players: map[string]PlayerState{},
+		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
@@ -76,7 +76,7 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	game0 := Game{
 		Id:      "game_0",
 		Board:   []Card{},
-		Players: map[string]PlayerState{},
+		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
@@ -124,7 +124,7 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	game1 := Game{
 		Id:      "game_1",
 		Board:   []Card{},
-		Players: map[string]PlayerState{},
+		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
@@ -183,7 +183,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	gameId1, err := CreateGameAndAddToGames()
 	assert.NoError(t, err)
 
-	err = AddPlayer(gameId1, "boris")
+	_, err = AddPlayer(gameId1, "boris")
 	assert.NoError(t, err)
 
 	err = DealCards(gameId1)
@@ -192,7 +192,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	game0 := Game{
 		Id:      "game_0",
 		Board:   []Card{},
-		Players: map[string]PlayerState{},
+		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
@@ -240,8 +240,9 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	game1 := Game{
 		Id:    "game_1",
 		Board: []Card{},
-		Players: map[string]PlayerState{
-			"player_boris": {
+		Players: []Player{
+			{
+				Id: "player_boris",
 				Name: "boris",
 				Hand: []Card{
 					{Value: 1, House: "gold"},
@@ -296,62 +297,45 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	assert.Equal(t, []Game{game0, game1}, Games)
 }
 
-// TODO: Refactor player map to list
 //func Test_PlayCard_HasExpectedState(t *testing.T) {
 //	debugOn = true
-//
-//	games := Games
 //
 //	gameId, err := CreateGameAndAddToGames()
 //	assert.NoError(t, err)
 //
-//	games = Games
-//
-//	err = AddPlayer(gameId, "boris")
+//	_, err = AddPlayer(gameId, "boris")
 //	assert.NoError(t, err)
 //
-//	games = Games
-//
-//	err = AddPlayer(gameId, "papi")
+//	_, err = AddPlayer(gameId, "papi")
 //	assert.NoError(t, err)
 //
-//	games = Games
-//
-//	err = AddPlayer(gameId, "claudio")
+//	_, err = AddPlayer(gameId, "claudio")
 //	assert.NoError(t, err)
 //
-//	games = Games
-//
-//	err = AddPlayer(gameId, "jorge")
+//	_, err = AddPlayer(gameId, "jorge")
 //	assert.NoError(t, err)
-//
-//	games = Games
 //
 //	err = DealCards(gameId)
 //	assert.NoError(t, err)
 //
-//	games = Games
-//
 //	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
-//
-//	games = Games
-//
-//	fmt.Printf("%+v\\n", games)
 //
 //	game := Game{
 //		Id: "game_0",
 //		Board: []Card{
 //			{Value: 1, House: "gold"},
 //		},
-//		Players: map[string]PlayerState{
-//			"player_boris": {
+//		Players: []Player{
+//			{
+//				Id: "player_boris",
 //				Name: "boris",
 //				Hand: []Card{
 //					{Value: 1, House: "cups"},
 //					{Value: 1, House: "spades"},
 //				},
 //			},
-//			"player_papi": {
+//			{
+//				Id: "player_papi",
 //				Name: "papi",
 //				Hand: []Card{
 //					{Value: 1, House: "clubs"},
@@ -359,7 +343,8 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 //					{Value: 2, House: "cups"},
 //				},
 //			},
-//			"player_claudio": {
+//			{
+//				Id: "player_claudio",
 //				Name: "claudio",
 //				Hand: []Card{
 //					{Value: 2, House: "spades"},
@@ -367,7 +352,8 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 //					{Value: 3, House: "gold"},
 //				},
 //			},
-//			"player_jorge": {
+//			{
+//				Id: "player_jorge",
 //				Name: "jorge",
 //				Hand: []Card{
 //					{Value: 3, House: "cups"},

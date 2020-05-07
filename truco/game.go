@@ -6,10 +6,10 @@ import (
 )
 
 type Game struct {
-	Id      string                 `json:"id"`
-	Players map[string]PlayerState `json:"players"`
-	Board   []Card                 `json:"board"`
-	Deck    []Card                 `json:"deck"`
+	Id      string   `json:"id"`
+	Board   []Card   `json:"board"`
+	Players []Player `json:"players"`
+	Deck    []Card   `json:"deck"`
 }
 
 func createGame(games []Game) (*Game, error) {
@@ -30,7 +30,7 @@ func createGame(games []Game) (*Game, error) {
 	newGame := Game{
 		Id:      gameId,
 		Board:   []Card{},
-		Players: map[string]PlayerState{},
+		Players: []Player{},
 		Deck:    buildDeck(),
 	}
 

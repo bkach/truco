@@ -34,6 +34,18 @@ func FindGameWithId(id string) (int, *Game, error) {
 	return index, &Games[index], nil
 }
 
+func FindPlayerWithId(game Game, id string) (int, *Player, error) {
+	index := sort.Search(len(game.Players), func(i int) bool {
+		return game.Players[i].Name == id
+	})
+
+	if index == len(game.Players) {
+		return 0, nil, errors.New("player with id " + id + " not found in game " + game.Id)
+	}
+
+	return index, &game.Players[index], nil
+}
+
 func AddPlayer(gameId string, name string) (string, error) {
 	gameIndex, game, err := FindGameWithId(gameId)
 
@@ -49,17 +61,17 @@ func AddPlayer(gameId string, name string) (string, error) {
 		return "", errors.New("no more new players can be added")
 	}
 
-	newPlayerId, newPlayerState, err := createPlayer(name)
+	newPlayer, err := createPlayer(name)
 
 	if err != nil {
 		return "", err
 	}
 
-	game.Players[newPlayerId] = *newPlayerState
+	game.Players = append(game.Players, *newPlayer)
 
 	Games[gameIndex] = *game
 
-	return newPlayerId, nil
+	return newPlayer.Id, nil
 }
 
 func PlayCard(gameId string, playerId string, card Card) error {
@@ -69,7 +81,13 @@ func PlayCard(gameId string, playerId string, card Card) error {
 		return err
 	}
 
-	playerHand := game.Players[playerId].Hand
+	playerIndex, player, err := FindPlayerWithId(*game, playerId)
+
+	if err != nil {
+		return err
+	}
+
+	playerHand := player.Hand
 	board := game.Board
 
 	index, err := findCardIndex(playerHand, card)
@@ -80,8 +98,8 @@ func PlayCard(gameId string, playerId string, card Card) error {
 	playerHand = removeCard(playerHand, index)
 	board = addCard(board, card)
 
-	game.Players[playerId] = PlayerState{
-		Name: game.Players[playerId].Name,
+	game.Players[playerIndex] = Player{
+		Name: game.Players[playerIndex].Name,
 		Hand: playerHand, // Updated value
 	}
 
