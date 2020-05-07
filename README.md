@@ -16,6 +16,10 @@ This Repo is a simple backend for the game [Truco](https://en.wikipedia.org/wiki
 
 It's working!
 
-## ToDo
+# Endpoints
+
+For a list of endpoints and how to use them, take a look at the [`routes.go`](https://github.com/bkach/truco-backend/blob/master/routers/routes.go) file.
+
+# ToDo
 
 Quite a lot. WIP!
