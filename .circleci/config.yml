@@ -23,7 +23,7 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: go get github.com/gofrs/uuid
-      - run: go get github.com/golang/gddo
+      - run: go get github.com/golang/gddo/httputil/header
       - run: go get github.com/gorilla/mux
       - run: go get github.com/stretchr/testify
       - run: go test all
