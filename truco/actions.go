@@ -21,6 +21,18 @@ func CreateGameAndAddToGames() (string, error) {
 	return newGame.Id, nil
 }
 
+func DeleteGame(gameId string) error {
+	index, _, err := FindGameWithId(gameId)
+
+	if err != nil {
+		return err
+	}
+
+	Games = append(Games[:index], Games[index+1:]...)
+
+	return nil
+}
+
 func FindGameWithId(id string) (int, *Game, error) {
 	gameIndex := -1
 	for index, game := range Games {

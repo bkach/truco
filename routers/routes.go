@@ -14,6 +14,9 @@ func BuildRouter() *mux.Router {
 	// Creates a game
 	router.HandleFunc("/createGame", handlers.CreateGameHandler())
 
+	// Deletes a game, game_id query required
+	router.HandleFunc("/deleteGame", handlers.DeleteGameHandler())
+
 	// Gets a game, game_id query required
 	router.HandleFunc("/game", handlers.GetGameHandler())
 

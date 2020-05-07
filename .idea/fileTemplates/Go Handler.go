@@ -3,7 +3,7 @@ package ${GO_PACKAGE_NAME}
 import (
 	"encoding/json"
 	"net/http"
-	"truco-backend/truco"
+	"github.com/bkach/truco-backend/truco"
 )
 
 type ${className}Request struct {
