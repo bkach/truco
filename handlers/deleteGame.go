@@ -7,7 +7,6 @@ import (
 	"net/url"
 )
 
-// Handler which ...
 func DeleteGameHandler() http.HandlerFunc {
 	return util.BuildHandler(nil, func(w http.ResponseWriter, queries url.Values) {
 		gameId := queries["game_id"][0]
