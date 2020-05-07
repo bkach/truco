@@ -26,4 +26,4 @@ jobs:
       - run: go get github.com/golang/gddo/httputil/header
       - run: go get github.com/gorilla/mux
       - run: go get github.com/stretchr/testify
-      - run: go test all
+      - run: go test github.com/bkach/truco-backend/truco
