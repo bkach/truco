@@ -9,18 +9,18 @@ import (
 )
 
 type AddPlayerRequestBody struct {
-	GameId string `json:"game_id"`
-	Name   string `json:"name"`
+	Name string `json:"name"`
 }
 
 type AddPlayerResponse struct {
-	PlayerId	string `json:"player_id"`
+	PlayerId string `json:"player_id"`
 }
 
 func AddPlayerHandler() http.HandlerFunc {
 	requestBody := AddPlayerRequestBody{}
 	return util.BuildHandler(&requestBody, func(w http.ResponseWriter, queries url.Values) {
-		playerId, err := truco.AddPlayer(requestBody.GameId, requestBody.Name)
+		gameId := queries["game_id"][0]
+		playerId, err := truco.AddPlayer(gameId, requestBody.Name)
 
 		if err != nil {
 			util.LogInternalError(w, err)

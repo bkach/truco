@@ -12,19 +12,19 @@ type ${className}Request struct {
 
 // Handler which ...
 func ${className}Handler() http.HandlerFunc {
-	request := GetGameRequest{}
-	return BuildHandler(&request, func(w http.ResponseWriter, queries url.Values) {
+	request := ${className}Request{}
+	return util.BuildHandler(&request, func(w http.ResponseWriter, queries url.Values) {
 	    err := Errors.New("test error")
 
 		if err != nil {
-			LogInternalError(w, err)
+			util.LogInternalError(w, err)
 			return
 		}
 
 		err = json.NewEncoder(w).Encode(...)
 
 		if err != nil {
-			LogInternalError(w, err)
+			util.LogInternalError(w, err)
 			return
 		}
 	})
