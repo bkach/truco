@@ -3,10 +3,10 @@ package handlers
 import (
 	"errors"
 	"fmt"
+	"github.com/bkach/truco-backend/handlers/util"
+	"github.com/bkach/truco-backend/truco"
 	"net/http"
 	"net/url"
-	"truco-backend/handlers/util"
-	"truco-backend/truco"
 )
 
 func DealCardsHandler() http.HandlerFunc {

@@ -23,4 +23,4 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: go get
-      - run: go test ./truco
+      - run: go test github.com/bkach/truco-backend/truco
