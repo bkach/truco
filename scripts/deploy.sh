@@ -9,3 +9,4 @@ ssh -t "$TRUCO_SERVER" <<-'ENDSSH'
 ENDSSH
 
 echo "Website deployed 🎉"
+xdg-open "https://bkach.com"
