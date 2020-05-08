@@ -36,7 +36,7 @@ func BuildRouter() *mux.Router {
 	api.HandleFunc("/playCard", handlers.PlayCardHandler())
 
 	// The route below serves the frontend
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("frontend/dist/")))
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("frontend/build/")))
 
 	return router
 }
