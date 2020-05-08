@@ -26,7 +26,7 @@ chmod +x /scripts/deploy.sh
 ./scripts/deploy.sh
 ```
 
-Take a look at [deploy.sh](https://github.com/bkach/truco/blob/master/scripts/deploy.sh) for details.
+Take a look at [`deploy.sh`](https://github.com/bkach/truco/blob/master/scripts/deploy.sh) for details.
 
 # Endpoints
 
