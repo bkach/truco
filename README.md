@@ -18,7 +18,7 @@ It's working!
 
 # Endpoints
 
-For a list of endpoints and how to use them, take a look at the [`routes.go`](https://github.com/bkach/truco-backend/blob/master/routers/routes.go) file.
+For a list of endpoints and how to use them, take a look at the [`routes.go`](https://github.com/bkach/truco/blob/master/routers/routes.go) file.
 
 # ToDo
 
