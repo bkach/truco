@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/bkach/truco/handlers/util"
 	"github.com/bkach/truco/truco"
 	"net/http"
@@ -35,5 +36,7 @@ func PlayCardHandler() http.HandlerFunc {
 		}
 
 		w.WriteHeader(http.StatusOK)
+
+		fmt.Printf("\nPlaying card %+v %s", request.Card, gameId)
 	})
 }

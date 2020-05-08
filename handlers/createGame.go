@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/bkach/truco/handlers/util"
 	"github.com/bkach/truco/truco"
 	"net/http"
@@ -28,5 +29,7 @@ func CreateGameHandler() http.HandlerFunc {
 			util.LogInternalError(w, err)
 			return
 		}
+
+		fmt.Printf("\nCreated game %s", gameId)
 	})
 }

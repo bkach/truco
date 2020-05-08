@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/bkach/truco/handlers/util"
 	"github.com/bkach/truco/truco"
 	"net/http"
@@ -37,5 +38,7 @@ func CreatePlayerHandler() http.HandlerFunc {
 		err = json.NewEncoder(w).Encode(CreatePlayerResponse{
 			PlayerId: playerId,
 		})
+
+		fmt.Printf("\nCreated game %s with playerId %s", playerName, playerId)
 	})
 }

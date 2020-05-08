@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/bkach/truco/handlers/util"
 	"github.com/bkach/truco/truco"
 	"net/http"
@@ -34,5 +35,7 @@ func DeletePlayerHandler() http.HandlerFunc {
 		}
 
 		w.WriteHeader(http.StatusOK)
+
+		fmt.Printf("\nDeleted game with gameId %s", gameId)
 	})
 }
