@@ -28,7 +28,7 @@ class TestComponent extends React.Component {
 
 export default () => (
   <>
-    <h1>Truco Test 2</h1>
+    <h1>🚧👷🚧👷🚧👷🚧👷🚧👷🚧👷🚧👷🚧👷</h1>
       <TestComponent />
   </>
 );
