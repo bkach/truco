@@ -34,6 +34,10 @@ func DeleteGame(gameId string) error {
 	return nil
 }
 
+func NumGames() int {
+	return len(Games)
+}
+
 func FindGameWithId(id string) (int, *Game, error) {
 	gameIndex := -1
 	for index, game := range Games {

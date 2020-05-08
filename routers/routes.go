@@ -9,7 +9,7 @@ func BuildRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
 	// The route below is currently just used for testing
-	router.HandleFunc("/", handlers.CreateGameHandler())
+	router.HandleFunc("/", handlers.StatusHandler())
 
 	// Creates a game
 	router.HandleFunc("/createGame", handlers.CreateGameHandler())
