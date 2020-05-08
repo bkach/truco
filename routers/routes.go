@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/bkach/truco-backend/handlers"
+	"github.com/bkach/truco/handlers"
 	"github.com/gorilla/mux"
 )
 

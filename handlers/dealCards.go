@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/bkach/truco-backend/handlers/util"
-	"github.com/bkach/truco-backend/truco"
+	"github.com/bkach/truco/handlers/util"
+	"github.com/bkach/truco/truco"
 	"net/http"
 )
 

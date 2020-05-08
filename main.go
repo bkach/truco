@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bkach/truco-backend/routers"
+	"github.com/bkach/truco/routers"
 	"log"
 	"net/http"
 )
