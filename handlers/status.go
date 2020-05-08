@@ -10,7 +10,15 @@ import (
 // Handler which ...
 func StatusHandler() http.HandlerFunc {
 	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
-		_, err := fmt.Fprintf(w, "Truco up and running, %d games", truco.NumGames())
+		numGames := truco.NumGames()
+
+		var statusString string
+		if numGames == 1 {
+			statusString = "Truco up and running, %d active game"
+		} else {
+			statusString = "Truco up and running, %d active games"
+		}
+		_, err := fmt.Fprintf(w, statusString, numGames)
 
 		if err != nil {
 			util.LogInternalError(w, err)
