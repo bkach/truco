@@ -8,10 +8,11 @@ import (
 func Test_CreateGame_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, err := CreateGameAndAddToGames()
+	_, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
 	game := Game{
+		Name:    "game0",
 		Board:   []Card{},
 		Id:      "game_0",
 		Players: []Player{},
@@ -67,13 +68,14 @@ func Test_CreateGame_HasExpectedState(t *testing.T) {
 func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, err := CreateGameAndAddToGames()
+	_, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	_, err = CreateGameAndAddToGames()
+	_, err = CreateGameAndAddToGames("game1")
 	assert.NoError(t, err)
 
 	game0 := Game{
+		Name:    "game0",
 		Id:      "game_0",
 		Board:   []Card{},
 		Players: []Player{},
@@ -122,6 +124,7 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	}
 
 	game1 := Game{
+		Name:    "game1",
 		Id:      "game_1",
 		Board:   []Card{},
 		Players: []Player{},
@@ -177,10 +180,10 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, err := CreateGameAndAddToGames()
+	_, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	gameId1, err := CreateGameAndAddToGames()
+	gameId1, err := CreateGameAndAddToGames("game1")
 	assert.NoError(t, err)
 
 	_, err = CreatePlayer(gameId1, "boris")
@@ -190,6 +193,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	assert.NoError(t, err)
 
 	game0 := Game{
+		Name:    "game0",
 		Id:      "game_0",
 		Board:   []Card{},
 		Players: []Player{},
@@ -238,6 +242,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	}
 
 	game1 := Game{
+		Name:  "game1",
 		Id:    "game_1",
 		Board: []Card{},
 		Players: []Player{
@@ -300,7 +305,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 func Test_PlayCard_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	gameId, err := CreateGameAndAddToGames()
+	gameId, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
 	_, err = CreatePlayer(gameId, "boris")
@@ -321,7 +326,8 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
 
 	game := Game{
-		Id: "game_0",
+		Name: "game0",
+		Id:   "game_0",
 		Board: []Card{
 			{Value: 1, House: "gold"},
 		},

@@ -10,8 +10,8 @@ const NumCardsInHand = 3
 // This file contains all the actions a user can perform on a game. It is the only file that can manipulate the global
 // state
 
-func CreateGameAndAddToGames() (string, error) {
-	newGame, err := createGame(Games)
+func CreateGameAndAddToGames(name string) (string, error) {
+	newGame, err := createGame(Games, name)
 
 	if err != nil {
 		return "", err
@@ -147,6 +147,7 @@ func PlayCard(gameId string, playerId string, card Card) error {
 	}
 
 	newGame := Game{
+		Name:    game.Name,
 		Id:      gameId,
 		Board:   board, // Updated value
 		Players: game.Players,
@@ -178,6 +179,7 @@ func DealCards(gameId string) error {
 	}
 
 	updatedGame := Game{
+		Name:    game.Name,
 		Id:      game.Id,
 		Board:   game.Board,
 		Players: game.Players,

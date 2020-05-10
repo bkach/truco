@@ -13,8 +13,15 @@ type CreateGameResponse struct {
 }
 
 func CreateGameHandler() http.HandlerFunc {
-	return util.BuildHandler(nil, func(w http.ResponseWriter, _ util.QueryExtractor) {
-		gameId, err := truco.CreateGameAndAddToGames()
+	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
+		name, err := queries.Query("name")
+
+		if err != nil {
+			util.LogInternalError(w, err)
+			return
+		}
+
+		gameId, err := truco.CreateGameAndAddToGames(name)
 
 		if err != nil {
 			util.LogInternalError(w, err)
