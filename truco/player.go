@@ -6,9 +6,10 @@ import (
 )
 
 type Player struct {
-	Id	 string	`json:"id"`
-	Name string `json:"name"`
-	Hand []Card `json:"cards"`
+	Id                string `json:"id"`
+	Name              string `json:"name"`
+	Hand              []Card `json:"cards"`
+	CardIndicesPlayed []int  `json:"cardIndicesPlayed"`
 }
 
 func createPlayer(name string) (*Player, error) {
@@ -27,7 +28,7 @@ func createPlayer(name string) (*Player, error) {
 	}
 
 	return &Player{
-		Id: playerId,
+		Id:   playerId,
 		Name: name,
 	}, nil
 }

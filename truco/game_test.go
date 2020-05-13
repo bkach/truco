@@ -13,7 +13,6 @@ func Test_CreateGame_HasExpectedState(t *testing.T) {
 
 	game := Game{
 		Name:    "game0",
-		Board:   []Card{},
 		Id:      "game_0",
 		Players: []Player{},
 		Deck: []Card{
@@ -77,7 +76,6 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	game0 := Game{
 		Name:    "game0",
 		Id:      "game_0",
-		Board:   []Card{},
 		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
@@ -126,7 +124,6 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	game1 := Game{
 		Name:    "game1",
 		Id:      "game_1",
-		Board:   []Card{},
 		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
@@ -195,7 +192,6 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	game0 := Game{
 		Name:    "game0",
 		Id:      "game_0",
-		Board:   []Card{},
 		Players: []Player{},
 		Deck: []Card{
 			{Value: 1, House: "gold"},
@@ -242,9 +238,8 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	}
 
 	game1 := Game{
-		Name:  "game1",
-		Id:    "game_1",
-		Board: []Card{},
+		Name: "game1",
+		Id:   "game_1",
 		Players: []Player{
 			{
 				Id:   "player_boris",
@@ -302,7 +297,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	assert.Equal(t, []Game{game0, game1}, Games)
 }
 
-func Test_PlayCard_HasExpectedState(t *testing.T) {
+func Test_PlayCards_HasExpectedState(t *testing.T) {
 	debugOn = true
 
 	gameId, err := CreateGameAndAddToGames("game0")
@@ -324,20 +319,25 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "spades"})
+	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "cups"})
+
+	err = PlayCard(gameId, "player_papi", Card{Value: 2, House: "gold"})
 
 	game := Game{
 		Name: "game0",
 		Id:   "game_0",
-		Board: []Card{
-			{Value: 1, House: "gold"},
-		},
 		Players: []Player{
 			{
 				Id:   "player_boris",
 				Name: "boris",
 				Hand: []Card{
+					{Value: 1, House: "gold"},
 					{Value: 1, House: "cups"},
 					{Value: 1, House: "spades"},
+				},
+				CardIndicesPlayed: []int{
+					0, 2, 1,
 				},
 			},
 			{
@@ -347,6 +347,9 @@ func Test_PlayCard_HasExpectedState(t *testing.T) {
 					{Value: 1, House: "clubs"},
 					{Value: 2, House: "gold"},
 					{Value: 2, House: "cups"},
+				},
+				CardIndicesPlayed: []int{
+					1,
 				},
 			},
 			{

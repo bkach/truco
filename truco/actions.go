@@ -129,27 +129,22 @@ func PlayCard(gameId string, playerId string, card Card) error {
 		return err
 	}
 
-	playerHand := player.Hand
-	board := game.Board
-
-	index, err := findCardIndex(playerHand, card)
+	index, err := findCardIndex(player.Hand, card)
 	if err != nil {
 		return err
 	}
 
-	playerHand = removeCard(playerHand, index)
-	board = addCard(board, card)
-
+	cardIndicesPlayed := game.Players[playerIndex].CardIndicesPlayed
 	game.Players[playerIndex] = Player{
-		Id:   game.Players[playerIndex].Id,
-		Name: game.Players[playerIndex].Name,
-		Hand: playerHand, // Updated value
+		Id:                game.Players[playerIndex].Id,
+		Name:              game.Players[playerIndex].Name,
+		Hand:              player.Hand, // Updated value
+		CardIndicesPlayed: append(cardIndicesPlayed, index),
 	}
 
 	newGame := Game{
 		Name:    game.Name,
 		Id:      gameId,
-		Board:   board, // Updated value
 		Players: game.Players,
 		Deck:    game.Deck,
 	}
@@ -181,7 +176,6 @@ func DealCards(gameId string) error {
 	updatedGame := Game{
 		Name:    game.Name,
 		Id:      game.Id,
-		Board:   game.Board,
 		Players: game.Players,
 		Deck:    newDeck,
 	}
