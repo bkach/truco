@@ -15,7 +15,7 @@ func Test_CreateGame_HasExpectedState(t *testing.T) {
 		Name:    "game0",
 		Id:      "game_0",
 		Players: []Player{},
-		Deck: []Card{
+		deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
 			{Value: 1, House: "spades"},
@@ -77,7 +77,7 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 		Name:    "game0",
 		Id:      "game_0",
 		Players: []Player{},
-		Deck: []Card{
+		deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
 			{Value: 1, House: "spades"},
@@ -125,7 +125,7 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 		Name:    "game1",
 		Id:      "game_1",
 		Players: []Player{},
-		Deck: []Card{
+		deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
 			{Value: 1, House: "spades"},
@@ -193,7 +193,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 		Name:    "game0",
 		Id:      "game_0",
 		Players: []Player{},
-		Deck: []Card{
+		deck: []Card{
 			{Value: 1, House: "gold"},
 			{Value: 1, House: "cups"},
 			{Value: 1, House: "spades"},
@@ -251,7 +251,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 				},
 			},
 		},
-		Deck: []Card{
+		deck: []Card{
 			{Value: 1, House: "clubs"},
 			{Value: 2, House: "gold"},
 			{Value: 2, House: "cups"},
@@ -371,7 +371,7 @@ func Test_PlayCards_HasExpectedState(t *testing.T) {
 				},
 			},
 		},
-		Deck: []Card{
+		deck: []Card{
 			{Value: 4, House: "gold"},
 			{Value: 4, House: "cups"},
 			{Value: 4, House: "spades"},

@@ -9,7 +9,7 @@ type Game struct {
 	Name    string   `json:"name"`
 	Id      string   `json:"id"`
 	Players []Player `json:"players"`
-	Deck    []Card   `json:"deck"`
+	deck    []Card
 }
 
 func createGame(games []Game, name string) (*Game, error) {
@@ -31,7 +31,7 @@ func createGame(games []Game, name string) (*Game, error) {
 		Name:    name,
 		Id:      gameId,
 		Players: []Player{},
-		Deck:    buildDeck(),
+		deck:    buildDeck(),
 	}
 
 	return &newGame, nil

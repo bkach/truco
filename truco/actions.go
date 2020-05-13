@@ -75,7 +75,7 @@ func CreatePlayer(gameId string, name string) (string, error) {
 		return "", err
 	}
 
-	if len(game.Deck) < NumCardsInHand {
+	if len(game.deck) < NumCardsInHand {
 		return "", errors.New("deck not big enough to make a new hand")
 	}
 
@@ -146,7 +146,7 @@ func PlayCard(gameId string, playerId string, card Card) error {
 		Name:    game.Name,
 		Id:      gameId,
 		Players: game.Players,
-		Deck:    game.Deck,
+		deck:    game.deck,
 	}
 
 	Games[gameIndex] = newGame
@@ -161,11 +161,11 @@ func DealCards(gameId string) error {
 		return err
 	}
 
-	if len(game.Deck) < NumCardsInHand*len(game.Players) {
+	if len(game.deck) < NumCardsInHand*len(game.Players) {
 		return errors.New("deck not big enough to deal cards")
 	}
 
-	newDeck := game.Deck
+	newDeck := game.deck
 	for playerId, player := range game.Players {
 		player, deck := dealPlayerIn(newDeck, &player)
 		newDeck = deck
@@ -177,7 +177,7 @@ func DealCards(gameId string) error {
 		Name:    game.Name,
 		Id:      game.Id,
 		Players: game.Players,
-		Deck:    newDeck,
+		deck:    newDeck,
 	}
 
 	Games[gameIndex] = updatedGame
