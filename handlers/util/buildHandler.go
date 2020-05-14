@@ -25,6 +25,9 @@ func BuildHandler(
 			}
 		}
 
+		// enable cors
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
 		action(w, QueryExtractor{values: r.URL.Query()})
 	}
 }
