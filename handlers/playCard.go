@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/bkach/truco/handlers/util"
 	"github.com/bkach/truco/truco"
@@ -9,6 +10,10 @@ import (
 
 type PlayCardRequest struct {
 	Card truco.Card `json:"card"`
+}
+
+type PlayCardResponse  struct {
+	Game truco.Game `json:"game"`
 }
 
 func PlayCardHandler() http.HandlerFunc {
@@ -35,7 +40,16 @@ func PlayCardHandler() http.HandlerFunc {
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		_, game, err := truco.FindGameWithId(gameId)
+
+		if err != nil {
+			util.LogInternalError(w, err)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(PlayCardResponse{
+			Game: *game,
+		})
 
 		fmt.Printf("\nPlaying card %+v %s", request.Card, gameId)
 	})

@@ -10,11 +10,19 @@ import (
 
 type CreatePlayerResponse struct {
 	PlayerId string `json:"player_id"`
+	Game truco.Game `json:"game"`
 }
 
 func CreatePlayerHandler() http.HandlerFunc {
 	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
 		gameId, err := queries.Query("game_id")
+
+		if err != nil {
+			util.LogInternalError(w, err)
+			return
+		}
+
+	    _, game, err := truco.FindGameWithId(gameId)
 
 		if err != nil {
 			util.LogInternalError(w, err)
@@ -37,6 +45,7 @@ func CreatePlayerHandler() http.HandlerFunc {
 
 		err = json.NewEncoder(w).Encode(CreatePlayerResponse{
 			PlayerId: playerId,
+			Game: *game,
 		})
 
 		fmt.Printf("\nCreated game %s with playerId %s", playerName, playerId)
