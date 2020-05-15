@@ -9,7 +9,7 @@ This Repo is a simple implementation of the game [Truco](https://en.wikipedia.or
 
 1. `cd` to the cloned directory
 2. Run the command: `go run main.go`
-3. Navigate to `localhost:8000`
+3. Navigate to `localhost:8000/createGame?name=myGame`
 4. If you see output similar to:
 
 `{"game_id":"game_ffa71ce1-86e1-46b3-870f-b6fc3a019124"}`
