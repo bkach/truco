@@ -34,7 +34,4 @@ For a list of endpoints and how to use them, take a look at the [`routes.go`](ht
 
 # ToDo
 
-- [x] Remove the `board` concept and allow players to keep track of which card they play first, second, and third
-- [ ] The entire frontend, [I have some inkling for that might look like](https://docs.google.com/drawings/d/1c_wXfl3P--VGM77Gdfu8vPa-mZLwx8Xqx8Tz1zec_vg/edit?usp=sharing) - but it's very much WIP
-
 There's a [trello board](https://trello.com/b/ZHSFB92P/truco) where we're tracking our progress.
