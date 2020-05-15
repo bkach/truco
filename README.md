@@ -32,6 +32,7 @@ Take a look at [`deploy.sh`](https://github.com/bkach/truco/blob/master/scripts/
 
 For a list of endpoints and how to use them, take a look at the [`routes.go`](https://github.com/bkach/truco/blob/master/routers/routes.go) file.
 
-# ToDo
+# Project Management
 
-There's a [trello board](https://trello.com/b/ZHSFB92P/truco) where we're tracking our progress.
+- [Wireframes](https://docs.google.com/drawings/d/1c_wXfl3P--VGM77Gdfu8vPa-mZLwx8Xqx8Tz1zec_vg/edit?usp=sharing)
+- [Task Tracking (trello)](https://trello.com/b/ZHSFB92P/truco)
