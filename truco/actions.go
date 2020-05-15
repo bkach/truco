@@ -2,6 +2,7 @@ package truco
 
 import (
 	"errors"
+	"fmt"
 )
 
 const MaxPlayers = 4
@@ -132,6 +133,14 @@ func PlayCard(gameId string, playerId string, card Card) error {
 	index, err := findCardIndex(player.Hand, card)
 	if err != nil {
 		return err
+	}
+
+	for _, value := range game.Players[playerIndex].CardIndicesPlayed {
+		if value == index {
+			return errors.New(
+				fmt.Sprintf("Card %+v already played in this hand, cannot play card again", card),
+			)
+		}
 	}
 
 	cardIndicesPlayed := game.Players[playerIndex].CardIndicesPlayed
