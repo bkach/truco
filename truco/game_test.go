@@ -408,6 +408,70 @@ func Test_PlayCards_HasExpectedState(t *testing.T) {
 	assert.Equal(t, []Game{game}, Games)
 }
 
+// TODO: This could be split into much smaller tests
+func Test_GameChangeListener_WorksAsExpected(t *testing.T) {
+	debugOn = true
+
+	id1 := "gameChangeListenerId1"
+	listener1Counter := 0
+
+	id2 := "gameChangeListenerId2"
+	listener2Counter := 0
+
+	RegisterGameChangeListener(id1, func() {
+		listener1Counter++
+	})
+
+	RegisterGameChangeListener(id2, func() {
+		listener2Counter++
+	})
+
+	gameId, err := CreateGameAndAddToGames("game0")
+	assert.NoError(t, err)
+
+	assert.Equal(t, 1, listener1Counter)
+	assert.Equal(t, 1, listener2Counter)
+
+	playerId, err := CreatePlayer(gameId, "boris")
+	assert.NoError(t, err)
+
+	assert.Equal(t, 2, listener1Counter)
+	assert.Equal(t, 2, listener2Counter)
+
+	err = DealCards(gameId)
+	assert.NoError(t, err)
+
+	assert.Equal(t, 3, listener1Counter)
+	assert.Equal(t, 3, listener2Counter)
+
+	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	assert.NoError(t, err)
+
+	assert.Equal(t, 4, listener1Counter)
+	assert.Equal(t, 4, listener2Counter)
+
+	err = DeletePlayer(gameId, playerId)
+	assert.NoError(t, err)
+
+	assert.Equal(t, 5, listener1Counter)
+	assert.Equal(t, 5, listener2Counter)
+
+	err = DeleteGame(gameId)
+	assert.NoError(t, err)
+
+	assert.Equal(t, 6, listener1Counter)
+	assert.Equal(t, 6, listener2Counter)
+
+	RemoveGameChangeListener(id2)
+	assert.Equal(t, 1, len(gameChangeListeners))
+
+	gameId, err = CreateGameAndAddToGames("game0")
+	assert.NoError(t, err)
+
+	assert.Equal(t, 7, listener1Counter)
+	assert.Equal(t, 6, listener2Counter)
+}
+
 func cleanup(t *testing.T) {
 	t.Cleanup(func() {
 		Games = []Game{}
