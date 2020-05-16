@@ -138,7 +138,7 @@ func PlayCard(gameId string, playerId string, card Card) error {
 	for _, value := range game.Players[playerIndex].CardIndicesPlayed {
 		if value == index {
 			return errors.New(
-				fmt.Sprintf("Card %+v already played in this hand, cannot play card again", card),
+				fmt.Sprintf("card %+v already played in this hand, cannot play card again", card),
 			)
 		}
 	}
