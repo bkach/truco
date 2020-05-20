@@ -23,6 +23,10 @@ func BuildRouter() *mux.Router {
 	// Gets games
 	api.HandleFunc("/games", handlers.GetGamesHandler())
 
+	// Gets games - via socket connection!
+	// This will return the list of games only if there is an update to any of the games
+	api.HandleFunc("/gamesSocket", handlers.GetGamesSocketHandler())
+
 	// Creates a player, query needs a game_id and a name for the player
 	api.HandleFunc("/createPlayer", handlers.CreatePlayerHandler())
 
