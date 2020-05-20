@@ -9,7 +9,7 @@ import (
 )
 
 type CreatePlayerResponse struct {
-	PlayerId string `json:"player_id"`
+	Player truco.Player `json:"player"`
 	Game truco.Game `json:"game"`
 }
 
@@ -36,7 +36,7 @@ func CreatePlayerHandler() http.HandlerFunc {
 			return
 		}
 
-		playerId, err := truco.CreatePlayer(gameId, playerName)
+		player, err := truco.CreatePlayer(gameId, playerName)
 
 		if err != nil {
 			util.LogInternalError(w, err)
@@ -44,10 +44,10 @@ func CreatePlayerHandler() http.HandlerFunc {
 		}
 
 		err = json.NewEncoder(w).Encode(CreatePlayerResponse{
-			PlayerId: playerId,
+			Player: *player,
 			Game: *game,
 		})
 
-		fmt.Printf("\nCreated game %s with playerId %s", playerName, playerId)
+		fmt.Printf("\nCreated game %s with playerId %s", playerName, player.Id)
 	})
 }

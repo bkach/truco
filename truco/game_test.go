@@ -9,7 +9,7 @@ import (
 func Test_CreateGame_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, _, err := CreateGameAndAddToGames("game0")
+	_, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
 	game := Game{
@@ -68,10 +68,10 @@ func Test_CreateGame_HasExpectedState(t *testing.T) {
 func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, _, err := CreateGameAndAddToGames("game0")
+	_, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	_, _, err = CreateGameAndAddToGames("game1")
+	_, err = CreateGameAndAddToGames("game1")
 	assert.NoError(t, err)
 
 	game0 := Game{
@@ -178,16 +178,16 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, _, err := CreateGameAndAddToGames("game0")
+	_, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	gameId1, _, err := CreateGameAndAddToGames("game1")
+	game, err := CreateGameAndAddToGames("game1")
 	assert.NoError(t, err)
 
-	_, err = CreatePlayer(gameId1, "boris")
+	_, err = CreatePlayer(game.Id, "boris")
 	assert.NoError(t, err)
 
-	err = DealCards(gameId1)
+	err = DealCards(game.Id)
 	assert.NoError(t, err)
 
 	game0 := Game{
@@ -301,37 +301,37 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 func Test_PlayCards_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	gameId, _, err := CreateGameAndAddToGames("game0")
+	game, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	_, err = CreatePlayer(gameId, "boris")
+	_, err = CreatePlayer(game.Id, "boris")
 	assert.NoError(t, err)
 
-	_, err = CreatePlayer(gameId, "papi")
+	_, err = CreatePlayer(game.Id, "papi")
 	assert.NoError(t, err)
 
-	_, err = CreatePlayer(gameId, "claudio")
+	_, err = CreatePlayer(game.Id, "claudio")
 	assert.NoError(t, err)
 
-	_, err = CreatePlayer(gameId, "jorge")
+	_, err = CreatePlayer(game.Id, "jorge")
 	assert.NoError(t, err)
 
-	err = DealCards(gameId)
+	err = DealCards(game.Id)
 	assert.NoError(t, err)
 
-	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	err = PlayCard(game.Id, "player_boris", Card{Value: 1, House: "gold"})
 	assert.NoError(t, err)
 
-	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "spades"})
+	err = PlayCard(game.Id, "player_boris", Card{Value: 1, House: "spades"})
 	assert.NoError(t, err)
 
-	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "cups"})
+	err = PlayCard(game.Id, "player_boris", Card{Value: 1, House: "cups"})
 	assert.NoError(t, err)
 
-	err = PlayCard(gameId, "player_papi", Card{Value: 2, House: "gold"})
+	err = PlayCard(game.Id, "player_papi", Card{Value: 2, House: "gold"})
 	assert.NoError(t, err)
 
-	game := Game{
+	game1 := Game{
 		Name: "game0",
 		Id:   "game_0",
 		Players: []Player{
@@ -412,36 +412,32 @@ func Test_PlayCards_HasExpectedState(t *testing.T) {
 
 	cleanup(t)
 
-	assert.Equal(t, []Game{game}, Games)
+	assert.Equal(t, []Game{game1}, Games)
 }
 
 func Test_PlayCard_SameTime_HasError(t *testing.T) {
 	debugOn = true
 
-	gameId, err := CreateGameAndAddToGames("game0")
+	game, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	_, err = CreatePlayer(gameId, "boris")
+	_, err = CreatePlayer(game.Id, "boris")
 	assert.NoError(t, err)
 
-	err = DealCards(gameId)
+	err = DealCards(game.Id)
 	assert.NoError(t, err)
 
-	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	err = PlayCard(game.Id, "player_boris", Card{Value: 1, House: "gold"})
 	assert.NoError(t, err)
 
 	// Play same card
-	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	err = PlayCard(game.Id, "player_boris", Card{Value: 1, House: "gold"})
 	if assert.Error(t, err) {
 		assert.Equal(t,
 			errors.New("card {Value:1 House:gold} already played in this hand, cannot play card again"),
 			err,
 		)
 	}
-
-	//   if assert.Error(t, err) {
-	//	   assert.Equal(t, expectedError, err)
-	//   }
 }
 
 func cleanup(t *testing.T) {
