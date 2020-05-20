@@ -1,6 +1,7 @@
 package truco
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -319,10 +320,16 @@ func Test_PlayCards_HasExpectedState(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	assert.NoError(t, err)
+
 	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "spades"})
+	assert.NoError(t, err)
+
 	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "cups"})
+	assert.NoError(t, err)
 
 	err = PlayCard(gameId, "player_papi", Card{Value: 2, House: "gold"})
+	assert.NoError(t, err)
 
 	game := Game{
 		Name: "game0",
@@ -406,6 +413,35 @@ func Test_PlayCards_HasExpectedState(t *testing.T) {
 	cleanup(t)
 
 	assert.Equal(t, []Game{game}, Games)
+}
+
+func Test_PlayCard_SameTime_HasError(t *testing.T) {
+	debugOn = true
+
+	gameId, err := CreateGameAndAddToGames("game0")
+	assert.NoError(t, err)
+
+	_, err = CreatePlayer(gameId, "boris")
+	assert.NoError(t, err)
+
+	err = DealCards(gameId)
+	assert.NoError(t, err)
+
+	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	assert.NoError(t, err)
+
+	// Play same card
+	err = PlayCard(gameId, "player_boris", Card{Value: 1, House: "gold"})
+	if assert.Error(t, err) {
+		assert.Equal(t,
+			errors.New("card {Value:1 House:gold} already played in this hand, cannot play card again"),
+			err,
+		)
+	}
+
+	//   if assert.Error(t, err) {
+	//	   assert.Equal(t, expectedError, err)
+	//   }
 }
 
 func cleanup(t *testing.T) {
