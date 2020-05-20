@@ -9,7 +9,7 @@ This Repo is a simple implementation of the game [Truco](https://en.wikipedia.or
 
 1. `cd` to the cloned directory
 2. Run the command: `go run main.go`
-3. Navigate to `localhost:8000`
+3. Navigate to `localhost:8000/createGame?name=myGame`
 4. If you see output similar to:
 
 `{"game_id":"game_ffa71ce1-86e1-46b3-870f-b6fc3a019124"}`
@@ -32,9 +32,7 @@ Take a look at [`deploy.sh`](https://github.com/bkach/truco/blob/master/scripts/
 
 For a list of endpoints and how to use them, take a look at the [`routes.go`](https://github.com/bkach/truco/blob/master/routers/routes.go) file.
 
-# ToDo
+# Project Management
 
-- [x] Remove the `board` concept and allow players to keep track of which card they play first, second, and third
-- [ ] The entire frontend, [I have some inkling for that might look like](https://docs.google.com/drawings/d/1c_wXfl3P--VGM77Gdfu8vPa-mZLwx8Xqx8Tz1zec_vg/edit?usp=sharing) - but it's very much WIP
-
-There's a [trello board](https://trello.com/b/ZHSFB92P/truco) where we're tracking our progress.
+- [Wireframes](https://docs.google.com/drawings/d/1c_wXfl3P--VGM77Gdfu8vPa-mZLwx8Xqx8Tz1zec_vg/edit?usp=sharing)
+- [Task Tracking (trello)](https://trello.com/b/ZHSFB92P/truco)

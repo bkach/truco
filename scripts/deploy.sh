@@ -3,8 +3,8 @@ ssh -t "$TRUCO_SERVER" <<-'ENDSSH'
     git pull
     go build -o truco-executable
     cd frontend
-    yarn install
-    yarn build
+    npm install
+    npm run build
     sudo service truco restart
 ENDSSH
 
