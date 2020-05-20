@@ -8,7 +8,7 @@ import (
 func Test_CreateGame_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, err := CreateGameAndAddToGames("game0")
+	_, _, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
 	game := Game{
@@ -67,10 +67,10 @@ func Test_CreateGame_HasExpectedState(t *testing.T) {
 func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, err := CreateGameAndAddToGames("game0")
+	_, _, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	_, err = CreateGameAndAddToGames("game1")
+	_, _, err = CreateGameAndAddToGames("game1")
 	assert.NoError(t, err)
 
 	game0 := Game{
@@ -177,10 +177,10 @@ func Test_CreateMultipleGames_HasExpectedState(t *testing.T) {
 func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	_, err := CreateGameAndAddToGames("game0")
+	_, _, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
-	gameId1, err := CreateGameAndAddToGames("game1")
+	gameId1, _, err := CreateGameAndAddToGames("game1")
 	assert.NoError(t, err)
 
 	_, err = CreatePlayer(gameId1, "boris")
@@ -300,7 +300,7 @@ func Test_CreateMultipleGamesAndAddUser_HasExpectedState(t *testing.T) {
 func Test_PlayCards_HasExpectedState(t *testing.T) {
 	debugOn = true
 
-	gameId, err := CreateGameAndAddToGames("game0")
+	gameId, _, err := CreateGameAndAddToGames("game0")
 	assert.NoError(t, err)
 
 	_, err = CreatePlayer(gameId, "boris")
