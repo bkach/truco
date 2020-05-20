@@ -25,6 +25,9 @@ func BuildHandler(
 			}
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Content-Type", "application/json")
+
 		action(w, QueryExtractor{values: r.URL.Query()})
 	}
 }
