@@ -11,16 +11,16 @@ const NumCardsInHand = 3
 // This file contains all the actions a user can perform on a game. It is the only file that can manipulate the global
 // state
 
-func CreateGameAndAddToGames(name string) (string, *Game, error) {
+func CreateGameAndAddToGames(name string) (*Game, error) {
 	newGame, err := createGame(Games, name)
 
 	if err != nil {
-		return "", nil, err
+		return nil, err
 	}
 
 	Games = append(Games, *newGame)
 
-	return newGame.Id, newGame, nil
+	return newGame, nil
 }
 
 func DeleteGame(gameId string) error {
@@ -69,32 +69,32 @@ func FindPlayerWithId(game Game, id string) (int, *Player, error) {
 	return playerIndex, &game.Players[playerIndex], nil
 }
 
-func CreatePlayer(gameId string, name string) (string, error) {
+func CreatePlayer(gameId string, name string) (*Player, error) {
 	gameIndex, game, err := FindGameWithId(gameId)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if len(game.deck) < NumCardsInHand {
-		return "", errors.New("deck not big enough to make a new hand")
+		return nil, errors.New("deck not big enough to make a new hand")
 	}
 
 	if len(game.Players) == MaxPlayers {
-		return "", errors.New("no more new players can be added")
+		return nil, errors.New("no more new players can be added")
 	}
 
 	newPlayer, err := createPlayer(name)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	game.Players = append(game.Players, *newPlayer)
 
 	Games[gameIndex] = *game
 
-	return newPlayer.Id, nil
+	return newPlayer, nil
 }
 
 func DeletePlayer(gameId string, playerId string) error {

@@ -9,7 +9,6 @@ import (
 )
 
 type CreateGameResponse struct {
-	GameId string `json:"game_id"`
 	Game truco.Game `json:"game"`
 }
 
@@ -22,7 +21,7 @@ func CreateGameHandler() http.HandlerFunc {
 			return
 		}
 
-		gameId, game, err := truco.CreateGameAndAddToGames(name)
+		game, err := truco.CreateGameAndAddToGames(name)
 
 		if err != nil {
 			util.LogInternalError(w, err)
@@ -30,7 +29,6 @@ func CreateGameHandler() http.HandlerFunc {
 		}
 
 		err = json.NewEncoder(w).Encode(CreateGameResponse{
-			GameId: gameId,
 			Game: *game,
 		})
 
@@ -39,6 +37,6 @@ func CreateGameHandler() http.HandlerFunc {
 			return
 		}
 
-		fmt.Printf("\nCreated game %s", gameId)
+		fmt.Printf("\nCreated game %s", game.Id)
 	})
 }
