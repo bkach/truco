@@ -21,5 +21,5 @@ export const fetchX = async (url, options) => {
   }
 
   const text = await response.text();
-  return JSON.parse(text);
+  return text;
 };
