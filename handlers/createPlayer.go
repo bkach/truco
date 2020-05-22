@@ -14,8 +14,8 @@ type CreatePlayerResponse struct {
 }
 
 func CreatePlayerHandler() http.HandlerFunc {
-	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
-		gameId, err := queries.Query("game_id")
+	return util.BuildHandler(nil, func(w http.ResponseWriter, r *http.Request) {
+		gameId, err := util.GetQuery(r, "game_id")
 
 		if err != nil {
 			util.LogInternalError(w, err)
@@ -29,7 +29,7 @@ func CreatePlayerHandler() http.HandlerFunc {
 			return
 		}
 
-		playerName, err := queries.Query("name")
+		playerName, err := util.GetQuery(r, "name")
 
 		if err != nil {
 			util.LogInternalError(w, err)
@@ -48,6 +48,6 @@ func CreatePlayerHandler() http.HandlerFunc {
 			Game: *game,
 		})
 
-		fmt.Printf("\nCreated game %s with playerId %s", playerName, player.Id)
+		fmt.Printf("\nCreated player %s with playerId %s", playerName, player.Id)
 	})
 }

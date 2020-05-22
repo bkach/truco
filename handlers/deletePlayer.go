@@ -17,15 +17,15 @@ type DeletePlayerResponse struct {
 }
 
 func DeletePlayerHandler() http.HandlerFunc {
-	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
-		gameId, err := queries.Query("game_id")
+	return util.BuildHandler(nil, func(w http.ResponseWriter, r *http.Request) {
+		gameId, err := util.GetQuery(r, "game_id")
 
 		if err != nil {
 			util.LogInternalError(w, err)
 			return
 		}
 
-		playerId, err := queries.Query("player_id")
+		playerId, err := util.GetQuery(r, "player_id")
 
 		if err != nil {
 			util.LogInternalError(w, err)

@@ -2,15 +2,11 @@ package util
 
 import (
 	"errors"
-	"net/url"
+	"net/http"
 )
 
-type QueryExtractor struct {
-	values url.Values
-}
-
-func (extractor *QueryExtractor) Query(query string) (string, error) {
-	valueList := extractor.values[query]
+func GetQuery(r *http.Request, query string) (string, error) {
+	valueList := r.URL.Query()[query]
 
 	if len(valueList) == 0 {
 		return "", errors.New("Query not found: missing \"" + query + "\" query in the URL")

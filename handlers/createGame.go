@@ -13,8 +13,8 @@ type CreateGameResponse struct {
 }
 
 func CreateGameHandler() http.HandlerFunc {
-	return util.BuildHandler(nil, func(w http.ResponseWriter, queries util.QueryExtractor) {
-		name, err := queries.Query("name")
+	return util.BuildHandler(nil, func(w http.ResponseWriter, r *http.Request) {
+		name, err := util.GetQuery(r, "name")
 
 		if err != nil {
 			util.LogInternalError(w, err)

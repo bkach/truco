@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/bkach/truco/handlers"
+	"github.com/bkach/truco/handlers/sockets"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -23,10 +24,6 @@ func BuildRouter() *mux.Router {
 	// Gets games
 	api.HandleFunc("/games", handlers.GetGamesHandler())
 
-	// Gets games - via socket connection!
-	// This will return the list of games only if there is an update to any of the games
-	api.HandleFunc("/gamesSocket", handlers.GetGamesSocketHandler())
-
 	// Creates a player, query needs a game_id and a name for the player
 	api.HandleFunc("/createPlayer", handlers.CreatePlayerHandler())
 
@@ -41,6 +38,16 @@ func BuildRouter() *mux.Router {
 
 	// The route below serves the frontend
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("frontend/build/")))
+
+	// Socket connections
+	//
+	// These endpoints only emit data if there has been a likely change to their data
+
+	// Gets a list of games via socket connection
+	api.HandleFunc("/gamesSocket", sockets.GetGameListSocketHandler())
+
+	// Gets a list of players via socket connection
+	api.HandleFunc("/playersSocket", sockets.GetPlayerListSocketHandler())
 
 	return router
 }

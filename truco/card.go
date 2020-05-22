@@ -2,6 +2,7 @@ package truco
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 )
 
@@ -41,15 +42,13 @@ func findCardIndex(cards []Card, card Card) (int, error) {
 			return i, nil
 		}
 	}
-	return -1, errors.New("cannot find card")
+
+	msg := fmt.Sprintf("\nError: Cannot find card %+v", card)
+	return -1, errors.New(msg)
 }
 
 func removeCard(c []Card, i int) []Card {
 	return append((c)[:i], (c)[i+1:]...)
-}
-
-func addCard(cards []Card, card Card) []Card {
-	return append(cards, card)
 }
 
 func popRandomCard(cards []Card) ([]Card, Card) {
