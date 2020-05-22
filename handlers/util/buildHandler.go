@@ -9,7 +9,7 @@ import (
 // and subsequently performs the action() function
 func BuildHandler(
 	requestBody interface{},
-	action func(w http.ResponseWriter, queries QueryExtractor),
+	action http.HandlerFunc,
 ) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestBody != nil {
@@ -28,6 +28,6 @@ func BuildHandler(
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Content-Type", "application/json")
 
-		action(w, QueryExtractor{values: r.URL.Query()})
+		action(w, r)
 	}
 }

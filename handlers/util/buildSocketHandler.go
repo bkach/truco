@@ -1,9 +1,7 @@
-package handlers
+package util
 
 import (
 	"fmt"
-	"github.com/bkach/truco/handlers/util"
-	"github.com/bkach/truco/truco"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -17,42 +15,35 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func GetGamesSocketHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+type SocketHandlerFunc = func(w http.ResponseWriter, r *http.Request, conn *websocket.Conn)
+
+func BuildSocketHandler(
+	onConnect SocketHandlerFunc,
+	onDisconnect SocketHandlerFunc,
+) http.HandlerFunc {
+	return BuildHandler(nil, func(w http.ResponseWriter, r *http.Request) {
 		// Upgrades the http session to a websocket session
 		conn, err := upgrader.Upgrade(w, r, nil)
 
 		if err != nil {
-			util.LogInternalError(w, err)
+			LogInternalError(w, err)
 			return
 		}
 
 		// Only close the connection when the surrounding function returns
 		defer func() {
-			// Remove the game change listener associated with this address
-			truco.RemoveGameChangeListener(conn.RemoteAddr().String())
+			onDisconnect(w, r, conn)
 
 			// Then close the connection
 			err := conn.Close()
 
 			if err != nil {
-				util.LogInternalError(w, err)
+				LogInternalError(w, err)
 				return
 			}
 		}()
 
-		// Create a game change listener for this connection
-		var gameChangeListener = func() {
-			err := conn.WriteJSON(truco.Games)
-
-			if err != nil {
-				util.LogInternalError(w, err)
-				return
-			}
-		}
-
-		// Register the game change listener to the connection's ID
-		truco.RegisterGameChangeListener(conn.RemoteAddr().String(), gameChangeListener)
+		onConnect(w, r, conn)
 
 		// Listen for messages - not really used for any functionality at the moment
 		for {
@@ -64,10 +55,10 @@ func GetGamesSocketHandler() http.HandlerFunc {
 			}
 
 			if messageType == websocket.TextMessage {
-				fmt.Printf("Socket: Message Recieved: %s\n", string(p))
+				fmt.Printf("\nSocket: Message Recieved: %s", string(p))
 			} else if messageType == websocket.CloseMessage {
 				fmt.Printf("Socket connection closed %+v\n", p)
 			}
 		}
-	}
+	})
 }

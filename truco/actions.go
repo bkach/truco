@@ -20,7 +20,7 @@ func CreateGameAndAddToGames(name string) (*Game, error) {
 
 	Games = append(Games, *newGame)
 
-	notifyGameChangeListeners()
+	notifyGameListChangeListeners()
 
 	return newGame, nil
 }
@@ -34,13 +34,9 @@ func DeleteGame(gameId string) error {
 
 	Games = append(Games[:index], Games[index+1:]...)
 
-	notifyGameChangeListeners()
+	notifyGameListChangeListeners()
 
 	return nil
-}
-
-func NumGames() int {
-	return len(Games)
 }
 
 func FindGameWithId(id string) (int, *Game, error) {
@@ -98,7 +94,7 @@ func CreatePlayer(gameId string, name string) (*Player, error) {
 
 	Games[gameIndex] = *game
 
-	notifyGameChangeListeners()
+	notifyPlayerListChangeListeners(gameId)
 
 	return newPlayer, nil
 }
@@ -120,7 +116,7 @@ func DeletePlayer(gameId string, playerId string) error {
 
 	Games[gameIndex].Players = append(players[:playerIndex], players[playerIndex+1:]...)
 
-	notifyGameChangeListeners()
+	notifyPlayerListChangeListeners(gameId)
 
 	return nil
 }
@@ -169,7 +165,7 @@ func PlayCard(gameId string, playerId string, card Card) error {
 
 	Games[gameIndex] = newGame
 
-	notifyGameChangeListeners()
+	notifyPlayerListChangeListeners(gameId)
 
 	return nil
 }
@@ -202,25 +198,8 @@ func DealCards(gameId string) error {
 
 	Games[gameIndex] = updatedGame
 
-	notifyGameChangeListeners()
+	notifyPlayerListChangeListeners(gameId)
 
 	return nil
 }
 
-func RegisterGameChangeListener(id string, onGameChange func()) {
-	gameChangeListeners[id] = GameChangeListener{
-		onGameChanged: onGameChange,
-	}
-}
-
-func RemoveGameChangeListener(id string) {
-	delete(gameChangeListeners, id)
-}
-
-// Notifies all game change listener that there has been a change in any of our games
-// TODO: Optimization: Only allow subscriptions per-game
-func notifyGameChangeListeners() {
-	for _, listener := range gameChangeListeners {
-		listener.onGameChanged()
-	}
-}
