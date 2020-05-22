@@ -1,7 +1,7 @@
 import qs from 'querystring';
 import { fetchX } from 'lib/http';
 
-const API_BASE = 'https://bkach.com/api';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 // games
 export const getGames = () => {
