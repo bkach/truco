@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import * as api from 'lib/api';
+import List from 'components/List';
 
 class GameList extends Component {
   state = {
@@ -34,16 +35,11 @@ class GameList extends Component {
     }
 
     return (
-      <ul>
-        {games.map((game) => (
-          <li key={game.id}>
-            <button onClick={() => setGame(game)}>{game.name}</button>
-          </li>
-        ))}
-        <li>
-          <button onClick={this.handleAddGame}>Add game</button>
-        </li>
-      </ul>
+      <List
+        items={games}
+        handleAdd={this.handleAddGame}
+        handleSelect={setGame}
+      />
     );
   }
 }
