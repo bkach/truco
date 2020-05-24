@@ -7,11 +7,7 @@ import (
 	"net/http"
 )
 
-type PlayerListResponse struct {
-	Player []truco.Player `json:"players"`
-}
-
-func GetPlayerListSocketHandler() http.HandlerFunc {
+func GetGameSocketHandler() http.HandlerFunc {
 	onConnect := func(w http.ResponseWriter, r *http.Request, conn *websocket.Conn) {
 		gameId, err := util.GetQuery(r, "game_id")
 
@@ -27,21 +23,21 @@ func GetPlayerListSocketHandler() http.HandlerFunc {
 			return
 		}
 
-		truco.RegisterPlayerListChangeListener(
+		truco.RegisterGameChangeListener(
 			conn.RemoteAddr().String(),
 			gameId,
-			playerListChangeListener(gameId, conn),
+			gameChangeListener(gameId, conn),
 		)
 	}
 
 	onDisconnect := func(w http.ResponseWriter, r *http.Request, conn *websocket.Conn) {
-		truco.RemovePlayerListChangeListener(conn.RemoteAddr().String())
+		truco.RemoveGameChangeListener(conn.RemoteAddr().String())
 	}
 
 	return util.BuildSocketHandler(onConnect, onDisconnect)
 }
 
-func playerListChangeListener(gameId string, conn *websocket.Conn) func() {
+func gameChangeListener(gameId string, conn *websocket.Conn) func() {
 	return func() {
 		_, game, err := truco.FindGameWithId(gameId)
 
@@ -50,7 +46,7 @@ func playerListChangeListener(gameId string, conn *websocket.Conn) func() {
 			return
 		}
 
-		err = conn.WriteJSON(PlayerListResponse{ Player: game.Players })
+		err = conn.WriteJSON(game)
 
 		if err != nil {
 			util.LogSocketErrorAndCloseConnection(conn, err)
