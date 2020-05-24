@@ -4,7 +4,6 @@ import * as api from 'lib/api';
 
 class GameList extends Component {
   state = {
-    games: [],
     isLoading: false,
   };
 
@@ -14,7 +13,10 @@ class GameList extends Component {
 
   loadGames = () => {
     this.setState({ isLoading: true });
-    api.getGames().then((games) => this.setState({ games, isLoading: false }));
+    api.getGames().then((games) => {
+      this.props.setGames(games);
+      this.setState({ isLoading: false });
+    });
   };
 
   handleAddGame = () => {
@@ -24,7 +26,8 @@ class GameList extends Component {
   };
 
   render() {
-    const { games, isLoading } = this.state;
+    const { games, setGame } = this.props;
+    const { isLoading } = this.state;
 
     if (isLoading) {
       return <p>Loading...</p>;
@@ -34,9 +37,7 @@ class GameList extends Component {
       <ul>
         {games.map((game) => (
           <li key={game.id}>
-            <button onClick={() => this.props.setGame(game)}>
-              {game.name}
-            </button>
+            <button onClick={() => setGame(game)}>{game.name}</button>
           </li>
         ))}
         <li>
