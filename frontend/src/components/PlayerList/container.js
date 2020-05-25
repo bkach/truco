@@ -1,14 +1,15 @@
 import { connect } from 'react-redux';
 
-import { createPlayer, setPlayer } from 'state/player/actions';
+import { createPlayer, setPlayer, deletePlayer } from 'state/player/actions';
 
 import PlayerList from './component';
 
-const mapStateToProps = ({ player }) => ({ player });
+const mapStateToProps = ({ game }) => ({ game });
 
 const mapDispatchToProps = {
   createPlayer,
   setPlayer,
+  deletePlayer,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerList);
