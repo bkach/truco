@@ -1,5 +1,7 @@
 import React from 'react';
 
+import AddItem from './AddItem';
+
 const List = ({ items, handleAdd, handleSelect }) => (
   <ul>
     {items.map((item) => (
@@ -8,7 +10,7 @@ const List = ({ items, handleAdd, handleSelect }) => (
       </li>
     ))}
     <li>
-      <button onClick={handleAdd}>Add</button>
+      <AddItem onSubmit={handleAdd} />
     </li>
   </ul>
 );
