@@ -5,6 +5,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case 'SET_PLAYER':
       return payload.player;
 
+    case 'RESET_PLAYER':
+      return INITIAL_STATE;
+
     default:
       return state;
   }

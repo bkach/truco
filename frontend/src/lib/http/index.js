@@ -16,8 +16,13 @@ export const fetchX = async (url, options) => {
   const contentType = response.headers.get('Content-Type');
 
   if (contentType.includes('application/json')) {
-    const json = await response.json();
-    return json;
+    try {
+      const json = await response.json();
+      return json;
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   }
 
   const text = await response.text();

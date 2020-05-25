@@ -6,6 +6,10 @@ export const setPlayer = (player) => ({
   payload: { player },
 });
 
+export const resetPlayer = () => ({
+  type: 'RESET_PLAYER',
+});
+
 export const createPlayer = (name) => (dispatch, getState) => {
   const { game } = getState();
 
@@ -18,4 +22,16 @@ export const createPlayer = (name) => (dispatch, getState) => {
       dispatch(setPlayer(player));
       dispatch(setGame(game));
     });
+};
+
+export const deletePlayer = ({ gameId, playerId }) => (dispatch, getState) => {
+  const { player } = getState();
+
+  return api.deletePlayer({ gameId, playerId }).then(({ game }) => {
+    if (player.id === playerId) {
+      dispatch(resetPlayer());
+    }
+
+    dispatch(setGame(game));
+  });
 };
