@@ -7,7 +7,12 @@ class PlayerList extends Component {
     const { players, createPlayer, setPlayer } = this.props;
 
     return (
-      <List items={players} handleAdd={createPlayer} handleSelect={setPlayer} />
+      <List
+        title="Players"
+        items={players}
+        handleAdd={createPlayer}
+        handleSelect={setPlayer}
+      />
     );
   }
 }

@@ -10,7 +10,14 @@ class GameList extends Component {
   render() {
     const { games, createGame, setGame } = this.props;
 
-    return <List items={games} handleAdd={createGame} handleSelect={setGame} />;
+    return (
+      <List
+        title="Games"
+        items={games}
+        handleAdd={createGame}
+        handleSelect={setGame}
+      />
+    );
   }
 }
 
