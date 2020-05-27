@@ -44,10 +44,13 @@ func BuildRouter() *mux.Router {
 	// These endpoints only emit data if there has been a likely change to their data
 
 	// Gets a list of games via socket connection
-	api.HandleFunc("/gamesSocket", sockets.GetGameListSocketHandler())
+	api.HandleFunc("/gameListSocket", sockets.GetGameListSocketHandler())
 
 	// Gets a list of players via socket connection
-	api.HandleFunc("/playersSocket", sockets.GetPlayerListSocketHandler())
+	api.HandleFunc("/playerListSocket", sockets.GetPlayerListSocketHandler())
+
+	// Gets a game via socket connection
+	api.HandleFunc("/gameSocket", sockets.GetGameSocketHandler())
 
 	return router
 }

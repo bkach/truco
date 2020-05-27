@@ -35,6 +35,7 @@ func DeleteGame(gameId string) error {
 	Games = append(Games[:index], Games[index+1:]...)
 
 	notifyGameListChangeListeners()
+	notifyGameChangeListeners(gameId)
 
 	return nil
 }
@@ -95,6 +96,7 @@ func CreatePlayer(gameId string, name string) (*Player, error) {
 	Games[gameIndex] = *game
 
 	notifyPlayerListChangeListeners(gameId)
+	notifyGameChangeListeners(gameId)
 
 	return newPlayer, nil
 }
@@ -117,6 +119,7 @@ func DeletePlayer(gameId string, playerId string) error {
 	Games[gameIndex].Players = append(players[:playerIndex], players[playerIndex+1:]...)
 
 	notifyPlayerListChangeListeners(gameId)
+	notifyGameChangeListeners(gameId)
 
 	return nil
 }
@@ -165,7 +168,7 @@ func PlayCard(gameId string, playerId string, card Card) error {
 
 	Games[gameIndex] = newGame
 
-	notifyPlayerListChangeListeners(gameId)
+	notifyGameChangeListeners(gameId)
 
 	return nil
 }
@@ -198,7 +201,7 @@ func DealCards(gameId string) error {
 
 	Games[gameIndex] = updatedGame
 
-	notifyPlayerListChangeListeners(gameId)
+	notifyGameChangeListeners(gameId)
 
 	return nil
 }
