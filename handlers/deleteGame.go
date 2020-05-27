@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/bkach/truco/handlers/util"
 	"github.com/bkach/truco/truco"
@@ -23,7 +24,7 @@ func DeleteGameHandler() http.HandlerFunc {
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		err = json.NewEncoder(w).Encode(nil)
 
 		fmt.Printf("\nDeleted game with gameId %s", gameId)
 	})

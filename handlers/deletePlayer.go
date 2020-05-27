@@ -50,6 +50,6 @@ func DeletePlayerHandler() http.HandlerFunc {
 			Game: *game,
 		})
 
-		fmt.Printf("\nDeleted game with gameId %s", gameId)
+		fmt.Printf("\nDeleted player with gameId %s", gameId)
 	})
 }
