@@ -6,7 +6,7 @@ type Listener struct {
 }
 
 // Global state
-var Games []Game
+var Games = make([]Game, 0)
 var debugOn = false
 
 var gamesListChangeListeners = map[string]Listener{}
