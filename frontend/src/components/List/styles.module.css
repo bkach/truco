@@ -1,0 +1,97 @@
+.title {
+  margin: 16px 0;
+  padding: 0 16px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  height: 48px;
+  display: flex;
+  background-color: #ffff3f;
+}
+
+.item > *:first-child {
+  flex: 1;
+}
+
+.item:nth-of-type(1) {
+  background-color: #007f5f;
+}
+
+.item:nth-of-type(2) {
+  background-color: #2b9348;
+}
+
+.item:nth-of-type(3) {
+  background-color: #55a630;
+}
+
+.item:nth-of-type(4) {
+  background-color: #80b918;
+}
+
+.item:nth-of-type(5) {
+  background-color: #aacc00;
+}
+
+.item:nth-of-type(6) {
+  background-color: #bfd200;
+}
+
+.item:nth-of-type(7) {
+  background-color: #d4d700;
+}
+
+.item:nth-of-type(8) {
+  background-color: #dddf00;
+}
+
+.item:nth-of-type(9) {
+  background-color: #eeef20;
+}
+
+.button {
+  border: none;
+  padding: 0 13px;
+  text-align: left;
+  background: transparent;
+  border: solid 3px transparent;
+}
+
+.button:focus {
+  outline: none;
+  position: relative;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.control {
+  width: 48px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.control.delete {
+  font-size: 24px;
+  padding-bottom: 7px;
+}
+
+.control.submit {
+  font-size: 16px;
+  padding-bottom: 1px;
+}
+
+.input {
+  border: none;
+  padding: 0 16px;
+  background: transparent;
+}
+
+.input:focus {
+  outline: 0;
+  background: rgba(255, 255, 255, 0.3);
+}

@@ -3,34 +3,41 @@ import { fetchX } from 'lib/http';
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
-// games
 export const getGames = () => {
   return fetchX(`${API_BASE}/games`);
 };
 
-// game id
 export const createGame = ({ name }) => {
   return fetchX(`${API_BASE}/createGame?${qs.stringify({ name })}`);
 };
 
-// game
+export const deleteGame = (id) => {
+  return fetchX(`${API_BASE}/deleteGame?${qs.stringify({ game_id: id })}`);
+};
+
 export const getGame = (id) => {
   return fetchX(`${API_BASE}/game?${qs.stringify({ game_id: id })}`);
 };
 
-// player id
 export const createPlayer = ({ gameId, name }) => {
   return fetchX(
     `${API_BASE}/createPlayer?${qs.stringify({ game_id: gameId, name })}`
   );
 };
 
-// no response
+export const deletePlayer = ({ gameId, playerId }) => {
+  return fetchX(
+    `${API_BASE}/deletePlayer?${qs.stringify({
+      game_id: gameId,
+      player_id: playerId,
+    })}`
+  );
+};
+
 export const dealCards = ({ gameId }) => {
   return fetchX(`${API_BASE}/dealCards?${qs.stringify({ game_id: gameId })}`);
 };
 
-// no response
 export const playCard = ({ gameId, playerId, card }) => {
   return fetchX(
     `${API_BASE}/playCard?${qs.stringify({
