@@ -479,6 +479,59 @@ func Test_GameListChangeListener_WorksAsExpected(t *testing.T) {
 	assert.Equal(t, 2, listener2Counter)
 }
 
+func Test_Envido(t *testing.T) {
+	e1 := calculateEnvido([]Card{
+		{
+			Value: 1,
+			House: Gold,
+		},
+		{
+			Value: 2,
+			House: Gold,
+		},
+		{
+			Value: 1,
+			House: Spades,
+		},
+	})
+
+	assert.Equal(t, 23, e1)
+
+	e2 := calculateEnvido([]Card{
+		{
+			Value: 12,
+			House: Gold,
+		},
+		{
+			Value: 2,
+			House: Gold,
+		},
+		{
+			Value: 1,
+			House: Spades,
+		},
+	})
+
+	assert.Equal(t, 22, e2)
+
+	e3 := calculateEnvido([]Card{
+		{
+			Value: 12,
+			House: Gold,
+		},
+		{
+			Value: 8,
+			House: Spades,
+		},
+		{
+			Value: 1,
+			House: Clubs,
+		},
+	})
+
+	assert.Equal(t, 8, e3)
+}
+
 func cleanup(t *testing.T) {
 	t.Cleanup(func() {
 		Games = []Game{}
